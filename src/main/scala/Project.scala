@@ -52,17 +52,42 @@ case class Project(
   targetType: Option[String]) {
   //
     import Project._
+
     implicit val jsonDefaultFormats = DefaultFormats
 
     override def toString = s"Project(${projectName.get})"
-    def getModels():List[Model] = ???
+
+    def getModel(id: String)(implicit client: DataRobotClient) = {
+      val r = client.get(s"${path}${this.id.get}/models/${id}/").asString
+      parse(r.body).extract[Model]
+    }
+    def getModels()(implicit client: DataRobotClient) = {
+      val r = client.get(s"${path}${this.id.get}/models/").asString
+      val JArray(json) = parse(r.body)
+      json.map{ j => j.extract[Model] }
+    }
     def delete()(implicit client: DataRobotClient) = client.delete(s"${Project.path}${id.get}")
+
+    def getBlueprint(id: String)(implicit client: DataRobotClient) = {
+      val r = client.get(s"${path}${this.id.get}/blueprints/${id}/").asString
+      parse(r.body).extract[Blueprint]
+    }
+
+    def getBlueprintChart(id: String)(implicit client: DataRobotClient) = ???
+
+    def getBlueprints()(implicit client: DataRobotClient) = {
+      val r = client.get(s"${path}${this.id.get}/blueprints/").asString
+      val JArray(json) = parse(r.body)
+      json.map{ j => j.extract[Blueprint]}
+    }
 
     def getFeaturelists()(implicit client: DataRobotClient) = {
       val r = client.get(s"${path}${id.get}/featurelists/").asString
       val JArray(json) = parse(r.body)
       json.map{ j => j.extract[Featurelist] }
     }
+
+
 
     def setWorkerCount(wc: Int)(implicit client: DataRobotClient) = {
       val data = _getDataReady(Seq(("workerCount", wc)))
@@ -86,14 +111,30 @@ object Project {
 
   val path = "projects/"
   //
-  def createFromFile(file: String, projectName: String = null.asInstanceOf[String])(implicit client: DataRobotClient) = {
+  def createFromFile(file: String, projectName: String = null.asInstanceOf[String], maxWait: Int = 600000)(implicit client: DataRobotClient) = {
     val pName = if(projectName == null) file else projectName
     val fs: java.io.InputStream = new java.io.FileInputStream(file)
     val bytesInStream = fs.available
     val dataMP = MultiPart(name= "file", filename = file, mime = "text/csv", data = fs, numBytes = bytesInStream, lenWritten => Unit)
     val projectNameMP = MultiPart(name = "projectName", filename = "", mime = "text/plain", data = pName)
-    client.postMulti("projects/", projectNameMP, dataMP)
+    val status = client.postMulti("projects/", projectNameMP, dataMP)
+    val loc = Waiter.waitForAsyncResolution(status.headers("location")(0), maxWait)
+    Project.get(loc(0).replace(s"${client.endpoint}${this.path}", ""))
   }
+
+  def createFromHDFS(
+    url: String,
+    port: String = null.asInstanceOf[String],
+    projectName: String = null.asInstanceOf[String],
+    maxWait: Int = 600000) = ???
+
+  def createFromDataSource(
+    dataSource: String,
+    userName: String,
+    password: String,
+    projectName: String = null.asInstanceOf[String],
+    maxWait: Int = 600000) = ???
+
   def createFromURL(url: String, projectName: String = null.asInstanceOf[String])(implicit client: DataRobotClient) = {
     val pName = if(projectName == null) url else projectName
     val json = write(Map("url" -> url, "projectName" -> pName))
@@ -102,6 +143,9 @@ object Project {
   def delete(projectId: String)(implicit client: DataRobotClient) = {
     client.delete(s"$path$projectId")
   }
+
+  def fromAsync(url: String) = ???
+
   def get(projectId: String)(implicit client: DataRobotClient) = {
     val r = client.get(s"${path}${projectId}/").asString
     val result = parse(r.body) // comding from jackson.JsonMethods
@@ -111,7 +155,20 @@ object Project {
     val r = client.get(s"$path").asString
     val result = parse(r.body)
     val JArray(ps) = result
-    ps.map(p => p.extract[Project]}
+    ps.map(p => p.extract[Project])
+  }
+
+  def setTarget()(implicit client: DataRobotClient) = ???
+
+  def start(
+    sourceData: String,
+    target: String,
+    projectName: String = null.asInstanceOf[String],
+    mode: String = "autopilot",
+    maxWait: Int = 600000
+  )(implicit client: DataRobotClient) = {
+    this.createFromFile(sourceData, projectName, maxWait)
+    // add in to set target and being
   }
 
   def update(projectId: String, data: String)(implicit client: DataRobotClient) = client.patch(s"${path}${projectId}", data)
