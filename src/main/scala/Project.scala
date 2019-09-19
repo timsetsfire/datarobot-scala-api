@@ -57,48 +57,55 @@ case class Project(
 
     override def toString = s"Project(${projectName.get})"
 
-    def getModel(id: String)(implicit client: DataRobotClient) = {
+
+    def createFeaturelist(name: String, features:List[String])(implicit client: DataRobotClient) = {
+      val data = _getDataReady(Seq(
+        ("name", name),
+        ( "features", features)
+      ))
+      val r = client.postData(s"${path}${id.get}/featurelists/", data).asString
+      if(r.code == 201) {
+        parse(r.body).extract[Featurelist]
+      }
+      else {
+        throw new Exception(s"featurelist not successfully created")
+      }
+    }
+
+    def getModel(id: String)(implicit client: DataRobotClient)  = {
       val r = client.get(s"${path}${this.id.get}/models/${id}/").asString
       parse(r.body).extract[Model]
     }
-    def getModels()(implicit client: DataRobotClient) = {
-      val r = client.get(s"${path}${this.id.get}/models/").asString
-      val JArray(json) = parse(r.body)
-      json.map{ j => j.extract[Model] }
-    }
-    def delete()(implicit client: DataRobotClient) = client.delete(s"${Project.path}${id.get}")
 
-    def getBlueprint(id: String)(implicit client: DataRobotClient) = {
+    def getModels()(implicit client: DataRobotClient)  = Project.getModels(this.id.get)
+
+    def delete()(implicit client: DataRobotClient)  = Project.delete(this.id.get)
+
+    def getBlueprint(id: String)(implicit client: DataRobotClient)  = {
       val r = client.get(s"${path}${this.id.get}/blueprints/${id}/").asString
       parse(r.body).extract[Blueprint]
     }
 
-    def getBlueprintChart(id: String)(implicit client: DataRobotClient) = ???
+    def getBlueprintChart(id: String)(implicit client: DataRobotClient)  = ???
 
-    def getBlueprints()(implicit client: DataRobotClient) = {
-      val r = client.get(s"${path}${this.id.get}/blueprints/").asString
-      val JArray(json) = parse(r.body)
-      json.map{ j => j.extract[Blueprint]}
-    }
+    def getBlueprints()(implicit client: DataRobotClient)  = Project.getBlueprints(this.id.get)
 
-    def getFeaturelists()(implicit client: DataRobotClient) = {
-      val r = client.get(s"${path}${id.get}/featurelists/").asString
-      val JArray(json) = parse(r.body)
-      json.map{ j => j.extract[Featurelist] }
-    }
+    def getFeaturelists()(implicit client: DataRobotClient)  = Project.getFeaturelists(this.id.get)
 
+    def getModelJobs(status: String = null.asInstanceOf[String])(implicit client: DataRobotClient)  = Project.getModelJobs(this.id.get, status)
 
-
-    def setWorkerCount(wc: Int)(implicit client: DataRobotClient) = {
+    def setWorkerCount(wc: Int)(implicit client: DataRobotClient)  = {
       val data = _getDataReady(Seq(("workerCount", wc)))
       Project.update(id.get, data)
     }
-    def unlockHoldout()(implicit client: DataRobotClient)= {
+
+    def unlockHoldout()(implicit client: DataRobotClient) = {
       val data = _getDataReady(Seq(("holdoutUnlocked", true)))
       val r = Project.update(id.get, data)
       holdoutUnlocked = Some(true)
     }
-    def setProjectName(name: String)(implicit client: DataRobotClient) = {
+
+    def setProjectName(name: String)(implicit client: DataRobotClient)  = {
       val data = _getDataReady(Seq(( "projectName", name)))
       val r = Project.update(id.get, data)
       projectName = Some(name)
@@ -111,6 +118,9 @@ object Project {
 
   val path = "projects/"
   //
+
+  def blend()(implicit client: DataRobotClient) = ???
+
   def createFromFile(file: String, projectName: String = null.asInstanceOf[String], maxWait: Int = 600000)(implicit client: DataRobotClient) = {
     val pName = if(projectName == null) file else projectName
     val fs: java.io.InputStream = new java.io.FileInputStream(file)
@@ -140,17 +150,83 @@ object Project {
     val json = write(Map("url" -> url, "projectName" -> pName))
     client.postData(s"${path}", data=json).asString
   }
+
+  //
+
+
+  def createModelingFeaturelist() = ???
+  def createTypeTransformFeature() = ???
+
+
   def delete(projectId: String)(implicit client: DataRobotClient) = {
     client.delete(s"$path$projectId")
   }
 
-  def fromAsync(url: String) = ???
+  def fromAsync(url: String)(implicit client: DataRobotClient) = ???
 
+  // getters
   def get(projectId: String)(implicit client: DataRobotClient) = {
     val r = client.get(s"${path}${projectId}/").asString
     val result = parse(r.body) // comding from jackson.JsonMethods
     result.extract[Project]
   }
+
+  def getAccessList(projectId: String)(implicit client: DataRobotClient) = ???
+  def getAllJobs(projectId: String)(implicit client: DataRobotClient) = ???
+  def getAssociationMatrixDetails(projectId: String)(implicit client: DataRobotClient) = ???
+  def getAssociations(projectId: String)(implicit client: DataRobotClient) = ???
+  def getBlenders(projectId: String)(implicit client: DataRobotClient) = ???
+
+  def getBlueprints(projectId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"${path}${projectId}/blueprints/").asString
+    val JArray(json) = parse(r.body)
+    json.map{ j => j.extract[Blueprint] }
+  }
+
+  def getDatasets(projectId: String)(implicit client: DataRobotClient) = ???
+  def getDatetimeModels(projectId: String)(implicit client: DataRobotClient) = ???
+
+  def getFeaturelists(projectId: String)(implicit client: DataRobotClient) = {
+      val r = client.get(s"${path}${projectId}/featurelists/").asString
+      val JArray(json) = parse(r.body)
+      json.map{ j => j.extract[Featurelist] }
+  }
+
+  def getFeatures(projectId: String)(implicit client: DataRobotClient) = ???
+  def getFrozenModels(projectId: String)(implicit client: DataRobotClient) = ???
+  def getLeaderboardLink(projectId: String)(implicit client: DataRobotClient) = ???
+  def getMetrics(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+
+  def getModelJob(projectId: String, jobId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"${path}${projectId}/modelJobs/${jobId}/").asString
+    val json = parse(r.body)
+    json.extract[ModelJob]
+  }
+
+  def getModelJobs(projectId: String, status: String)(implicit client: DataRobotClient) = {
+    if ( List("queue", "inprogress", "error").contains(status)) {
+      val r = client.get(s"${path}${projectId}/modelJobs/").params("status" -> status).asString
+      val JArray(json) = parse(r.body)
+      json.map{ j => j.extract[ModelJob]}
+    } else {
+      throw new Exception(s"don't understand status ${status} request")
+    }
+  }
+
+  def getModelingFeaturelists(projectId: String)(implicit client: DataRobotClient) = ???
+  def getModelingFeatures(projectId: String)(implicit client: DataRobotClient) = ???
+  def getModels(projectId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"${path}${projectId}/models/").asString
+    val JArray(json) = parse(r.body)
+    json.map{ j => j.extract[Model] }
+  }
+  def getPredictJobs(projectId: String)(implicit client: DataRobotClient) = ???
+  def getPrimeFiles(projectId: String)(implicit client: DataRobotClient) = ???
+  def getPrimeModels(projectId: String)(implicit client: DataRobotClient) = ???
+  def getRatingTableModels(projectId: String)(implicit client: DataRobotClient) = ???
+  def getRatingTables(projectId: String)(implicit client: DataRobotClient) = ???
+  def getStatus(projectId: String)(implicit client: DataRobotClient) = ???
+
   def listProjects()(implicit client: DataRobotClient) = {
     val r = client.get(s"$path").asString
     val result = parse(r.body)
@@ -158,12 +234,21 @@ object Project {
     ps.map(p => p.extract[Project])
   }
 
+  // setters
   def setTarget()(implicit client: DataRobotClient) = ???
+  def setWorkerCount(projectId: String, workerCount: Int)(implicit client: DataRobotClient) = ???
 
   def start(
     sourceData: String,
     target: String,
     projectName: String = null.asInstanceOf[String],
+    workerCount: Option[Int] = None,
+    metric: Option[String] = None,
+    autoPilotOn: Boolean = true,
+    blueprintThreshold: Option[Int] = Some(1),
+    partitioningMethod: Option[Partition],
+    postiveClass: Option[String] = None,
+    targetType: Option[String] = None,
     mode: String = "autopilot",
     maxWait: Int = 600000
   )(implicit client: DataRobotClient) = {
