@@ -1,5 +1,11 @@
 package com.datarobot
 
+import scala.util.Try
+import org.json4s._
+import org.json4s.jackson.Serialization.write
+import org.json4s.jackson.JsonMethods._
+import org.json4s.native.JsonMethods
+import org.json4s.{DefaultFormats, Extraction, JValue}
 
 /** Model
   * @param featurelistId  – the ID of the featurelist used by the model
@@ -50,4 +56,36 @@ case class Model(
   predictionThresholdReadOnly: Option[String]
 ) {
   override def toString = s"Model(${modelType.get})"
+}
+
+
+object Model { 
+
+  implicit val jsonDefaultFormats = DefaultFormats
+
+  def getModels(projectId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/models/").asString
+    val JArray(json) = parse(r.body)
+    json.map{ j => j.extract[Model] }
+  }
+  def get(projectId: String, modelId: String)(implicit client: DataRobotClient)  = {
+    val r = client.get(s"projects/${projectId}/models/${modelId}/").asString
+    parse(r.body).extract[Model]
+  }
+  
+  def starModel(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
+  def deleteModel(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
+  def createModel()(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def createFrozenModel(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
+  def checkModelCapabilities(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
+  def createBlender(modelIds: Seq[String])(implicit client: DataRobotClient) = ???
+  def getModelParameters(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
+  def getLiftChartData(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
+  def getResidualsChartData(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
+  def getRocCurveData(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
+  def getWordCloudData(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
+  def getMissingValuesReport(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
+  def getScoringCode(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
+  def advancedTuning(projectId: String, modelId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("nope")
+  def getReducedBlueprintChart(projectId: String, modelId: String)(implicit client: DataRobotClient) = ???
 }

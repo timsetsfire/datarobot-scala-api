@@ -12,7 +12,7 @@ import com.datarobot.Utilities._
 
 /** Project
   * @constructor
-    @param id – theIDofaproject
+    @param id – the ID of a project
     @param projectName – the name of a project
     @param fileName – the name of the dataset used to create the project
     @param stage – the stage of the project - if modeling, then the target is successfully set, and modeling or predictions can proceed.
@@ -57,47 +57,12 @@ case class Project(
 
     override def toString = s"Project(${projectName.get})"
 
-
-    def createFeaturelist(name: String, features:List[String])(implicit client: DataRobotClient) = {
-      val data = _getDataReady(Seq(
-        ("name", name),
-        ( "features", features)
-      ))
-      val r = client.postData(s"${path}${id.get}/featurelists/", data).asString
-      if(r.code == 201) {
-        parse(r.body).extract[Featurelist]
-      }
-      else {
-        throw new Exception(s"featurelist not successfully created")
-      }
-    }
-
-    def getModel(id: String)(implicit client: DataRobotClient)  = {
-      val r = client.get(s"${path}${this.id.get}/models/${id}/").asString
-      parse(r.body).extract[Model]
-    }
-
-    def getModels()(implicit client: DataRobotClient)  = Project.getModels(this.id.get)
-
+    /** project */ 
     def delete()(implicit client: DataRobotClient)  = Project.delete(this.id.get)
 
-    def getBlueprint(id: String)(implicit client: DataRobotClient)  = {
-      val r = client.get(s"${path}${this.id.get}/blueprints/${id}/").asString
-      parse(r.body).extract[Blueprint]
-    }
+    def setTarget(target: String)(implicit client: DataRobotClient) = Project.setTarget(this.id.get, target)
 
-    def getBlueprintChart(id: String)(implicit client: DataRobotClient)  = ???
-
-    def getBlueprints()(implicit client: DataRobotClient)  = Project.getBlueprints(this.id.get)
-
-    def getFeaturelists()(implicit client: DataRobotClient)  = Project.getFeaturelists(this.id.get)
-
-    def getModelJobs(status: String = null.asInstanceOf[String])(implicit client: DataRobotClient)  = Project.getModelJobs(this.id.get, status)
-
-    def setWorkerCount(wc: Int)(implicit client: DataRobotClient)  = {
-      val data = _getDataReady(Seq(("workerCount", wc)))
-      Project.update(id.get, data)
-    }
+    def setWorkerCount(wc: Int)(implicit client: DataRobotClient) = Project.setWorkerCount(this.id.get, wc)
 
     def unlockHoldout()(implicit client: DataRobotClient) = {
       val data = _getDataReady(Seq(("holdoutUnlocked", true)))
@@ -110,7 +75,60 @@ case class Project(
       val r = Project.update(id.get, data)
       projectName = Some(name)
     }
+    /** */
+    
+    /** blueprint */ 
+    def getBlueprints()(implicit client: DataRobotClient)  = Blueprint.getBlueprints(this.id.get)
+    def getBlueprint(id: String)(implicit client: DataRobotClient)  = Blueprint.get(this.id.get, id)
+    def getBlueprintChart(blueprintId: String)(implicit client: DataRobotClient)  = throw new NotImplementedError("Nope") //Blueprint.getBlueprintChart(this.id.get, blueprintId)
+    def getReducedBlueprintChart(blueprintId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")//Blueprint.getReducedBlueprintChart(this.id.get, blueprintId)
+    def getBlueprintDocumentation(blueprintId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")// Blueprint.getBlueprintDocumentation(this.id.get, blueprintId)
+    /** */ 
+
+    /** models */ 
+
+    def getModels()(implicit client: DataRobotClient)  = Model.getModels(this.id.get)
+
+    /** */ 
+
+    /** features */ 
+    def getFeature(featureName: String)(implicit client: DataRobotClient) = Feature.get(this.id.get, featureName)
+    def getFeatures()(implicit client: DataRobotClient) = Feature.getFeatures(this.id.get)
+
+    def typeTransformFeature(
+      name: String,
+      parentName: String,
+      variableType: String,
+      replacement: Boolean,
+      dateExtraction: String
+    )(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+
+    def dateExtractionTransformFeature(
+      name: String,
+      parentName: String,
+      variableType: String,
+      replacement: Boolean,
+      dateExtraction: String
+    )(implicit cient: DataRobotClient) = throw new NotImplementedError("Nope")
+
+    def batchTransformFeatures(
+      parentNames: Seq[String], 
+      variableType: String, 
+      prefix: String,
+      suffix: String
+    )(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+    /** */ 
+
+    /** featurelists */ 
+    def createFeaturelist(name: String, features: List[String])(implicit client: DataRobotClient) = Featurelist.createFeaturelist(this.id.get, name, features)
+    def deleteFeaturelist(featurelistId: String)(implicit cleint: DataRobotClient) = Featurelist.delete(this.id.get, featurelistId)
+    def getFeaturelists()(implicit client: DataRobotClient)  = Featurelist.getFeaturelists(this.id.get)
+    /** */ 
+
+    def getModelJobs(status: String = null.asInstanceOf[String])(implicit client: DataRobotClient)  = Project.getModelJobs(this.id.get, status)
+
   }
+
 
 object Project {
 
@@ -119,7 +137,7 @@ object Project {
   val path = "projects/"
   //
 
-  def blend()(implicit client: DataRobotClient) = ???
+  def blend()(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
 
   def createFromFile(file: String, projectName: String = null.asInstanceOf[String], maxWait: Int = 600000)(implicit client: DataRobotClient) = {
     val pName = if(projectName == null) file else projectName
@@ -136,14 +154,14 @@ object Project {
     url: String,
     port: String = null.asInstanceOf[String],
     projectName: String = null.asInstanceOf[String],
-    maxWait: Int = 600000) = ???
+    maxWait: Int = 600000) = throw new NotImplementedError("Nope")
 
   def createFromDataSource(
     dataSource: String,
     userName: String,
     password: String,
     projectName: String = null.asInstanceOf[String],
-    maxWait: Int = 600000) = ???
+    maxWait: Int = 600000) = throw new NotImplementedError("Nope")
 
   def createFromURL(url: String, projectName: String = null.asInstanceOf[String])(implicit client: DataRobotClient) = {
     val pName = if(projectName == null) url else projectName
@@ -153,16 +171,15 @@ object Project {
 
   //
 
-
-  def createModelingFeaturelist() = ???
-  def createTypeTransformFeature() = ???
+  def createModelingFeaturelist() = throw new NotImplementedError("Nope")
+  def createTypeTransformFeature() = throw new NotImplementedError("Nope")
 
 
   def delete(projectId: String)(implicit client: DataRobotClient) = {
     client.delete(s"$path$projectId")
   }
 
-  def fromAsync(url: String)(implicit client: DataRobotClient) = ???
+  def fromAsync(url: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
 
   // getters
   def get(projectId: String)(implicit client: DataRobotClient) = {
@@ -171,30 +188,19 @@ object Project {
     result.extract[Project]
   }
 
-  def getAccessList(projectId: String)(implicit client: DataRobotClient) = ???
-  def getAllJobs(projectId: String)(implicit client: DataRobotClient) = ???
-  def getAssociationMatrixDetails(projectId: String)(implicit client: DataRobotClient) = ???
-  def getAssociations(projectId: String)(implicit client: DataRobotClient) = ???
-  def getBlenders(projectId: String)(implicit client: DataRobotClient) = ???
+  def getAccessList(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getAllJobs(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getAssociationMatrixDetails(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getAssociations(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getBlenders(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
 
-  def getBlueprints(projectId: String)(implicit client: DataRobotClient) = {
-    val r = client.get(s"${path}${projectId}/blueprints/").asString
-    val JArray(json) = parse(r.body)
-    json.map{ j => j.extract[Blueprint] }
-  }
+  def getDatasets(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getDatetimeModels(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
 
-  def getDatasets(projectId: String)(implicit client: DataRobotClient) = ???
-  def getDatetimeModels(projectId: String)(implicit client: DataRobotClient) = ???
 
-  def getFeaturelists(projectId: String)(implicit client: DataRobotClient) = {
-      val r = client.get(s"${path}${projectId}/featurelists/").asString
-      val JArray(json) = parse(r.body)
-      json.map{ j => j.extract[Featurelist] }
-  }
-
-  def getFeatures(projectId: String)(implicit client: DataRobotClient) = ???
-  def getFrozenModels(projectId: String)(implicit client: DataRobotClient) = ???
-  def getLeaderboardLink(projectId: String)(implicit client: DataRobotClient) = ???
+  def getFeatures(projectId: String)(implicit client: DataRobotClient) = Feature.getFeatures(projectId)
+  def getFrozenModels(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getLeaderboardLink(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
   def getMetrics(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
 
   def getModelJob(projectId: String, jobId: String)(implicit client: DataRobotClient) = {
@@ -213,21 +219,17 @@ object Project {
     }
   }
 
-  def getModelingFeaturelists(projectId: String)(implicit client: DataRobotClient) = ???
-  def getModelingFeatures(projectId: String)(implicit client: DataRobotClient) = ???
-  def getModels(projectId: String)(implicit client: DataRobotClient) = {
-    val r = client.get(s"${path}${projectId}/models/").asString
-    val JArray(json) = parse(r.body)
-    json.map{ j => j.extract[Model] }
-  }
-  def getPredictJobs(projectId: String)(implicit client: DataRobotClient) = ???
-  def getPrimeFiles(projectId: String)(implicit client: DataRobotClient) = ???
-  def getPrimeModels(projectId: String)(implicit client: DataRobotClient) = ???
-  def getRatingTableModels(projectId: String)(implicit client: DataRobotClient) = ???
-  def getRatingTables(projectId: String)(implicit client: DataRobotClient) = ???
-  def getStatus(projectId: String)(implicit client: DataRobotClient) = ???
+  def getModelingFeaturelists(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getModelingFeatures(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
 
-  def listProjects()(implicit client: DataRobotClient) = {
+  def getPredictJobs(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getPrimeFiles(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getPrimeModels(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getRatingTableModels(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getRatingTables(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+  def getStatus(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+
+  def getProjects()(implicit client: DataRobotClient) = {
     val r = client.get(s"$path").asString
     val result = parse(r.body)
     val JArray(ps) = result
@@ -235,8 +237,15 @@ object Project {
   }
 
   // setters
-  def setTarget()(implicit client: DataRobotClient) = ???
-  def setWorkerCount(projectId: String, workerCount: Int)(implicit client: DataRobotClient) = ???
+  def setTarget(projectId: String, target: String)(implicit client: DataRobotClient) = {
+    val data = _getDataReady(Seq(( "target", target)))
+    Project.update(projectId, data)
+  }
+
+  def setWorkerCount(projectId: String, workerCount: Int)(implicit client: DataRobotClient) = {
+    val data = _getDataReady(Seq(("workerCount", workerCount)))
+    Project.update(projectId, data)
+  }
 
   def start(
     sourceData: String,
@@ -252,13 +261,36 @@ object Project {
     mode: String = "autopilot",
     maxWait: Int = 600000
   )(implicit client: DataRobotClient) = {
-    this.createFromFile(sourceData, projectName, maxWait)
-    // add in to set target and being
+    val project = this.createFromFile(sourceData, projectName, maxWait)
+
+    // val initData = Seq(
+    //   "workerCount" -> workerCount,
+    //   "metric" -> metric,
+    //   "autoPilotOn" -> autoPilotOn,
+    //   "blueprintThreshold" -> blueprintThreshold,
+    //   "partitioningMethod" -> partitionMethod,
+    //   "positiveClass" -> positiveClass,
+    //   "targetType" -> targetType,
+    //   "mode" -> mode,
+    //   "maxWait" -> maxWait
+    // ).filter( _._1 != None)
+    // val data = throw new NotImplementedError("Nope") _getDataReady(Seq(  ))
+
+    this.setTarget(project.id.get, target)
   }
 
+    // add in to set target and being
+
+  def start_autopilot(projectId: String, featurelistId: Option[String] = None) = throw new NotImplementedError("Nope")
+  
+  // {
+  //   val r = if(featurelistId == None) {
+  //     client.patch(s"${path}${projectId}/aim")
+  //   } else {
+  //     client.patch(s"${path}${projectId}/aim").params("featurelistId" -> featurelistId)
+  //   }
+  //   r}
+
+  
   def update(projectId: String, data: String)(implicit client: DataRobotClient) = client.patch(s"${path}${projectId}", data)
-
-
-
-
 }

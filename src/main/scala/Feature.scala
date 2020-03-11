@@ -1,5 +1,14 @@
 package com.datarobot
 
+import scala.util.Try
+import org.json4s._
+import org.json4s.jackson.Serialization.write
+import org.json4s.jackson.JsonMethods._
+import org.json4s.native.JsonMethods
+import org.json4s.{DefaultFormats, Extraction, JValue}
+import com.datarobot.enums.{VariableTypeTransform, DateExtractionUnits}
+
+
 /** Feature
   * @constructor
   * @param id (int) – the feature ID. (Note: Throughout the API, features are specified using their names, not this ID.)
@@ -43,4 +52,45 @@ package com.datarobot
     median: Option[Double],
     stdDev: Option[Double],
     targetLeakage: Option[String],
-  )
+  ) {
+    
+    override def toString = s"Feature(${name.get})"
+
+    def getFeatureHistogram()(implicit client: DataRobotClient) = Feature.getFeatureHistogram(projectId.get, this.name.get)
+  }
+
+  object Feature { 
+
+    implicit val jsonDefaultFormats = DefaultFormats
+
+    def getFeatures(projectId: String)(implicit client: DataRobotClient) = {
+      val r = client.get(s"projects/${projectId}/features/").asString
+      val result = parse(r.body)
+      val JArray(ps) = result
+      ps.map(p => p.extract[Feature])
+    }
+
+    def get(projectId: String, featureName: String)(implicit client: DataRobotClient) = { 
+      val r = client.get(s"/projects/${projectId}/feature/${featureName}/").asString
+      parse(r.body).extract[Model]
+    }
+
+//     get a feature historgram 
+// feature transformations
+
+    def getFeatureHistogram(projectId: String, featureName: String)(implicit client: DataRobotClient) = {
+      val r = client.get(s"/projects/${projectId}/featureHistograms/${featureName}/").asString
+      parse(r.body)
+    }
+
+    def featureTransform(projectId: String, 
+                         featureName: String, 
+                         transformedFeatureName: String,
+                         variableType: VariableTypeTransform.Value,
+                         replacement: Boolean, 
+                         dateExtraction: DateExtractionUnits.Value,
+    ) = throw new NotImplementedError("Not yet")
+
+  }
+
+  case class FeatureHistogram()

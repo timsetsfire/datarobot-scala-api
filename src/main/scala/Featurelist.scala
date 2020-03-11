@@ -1,5 +1,17 @@
 package com.datarobot
 
+import scala.util.Try
+import org.json4s._
+import org.json4s.jackson.Serialization.write
+import org.json4s.jackson.JsonMethods._
+import org.json4s.native.JsonMethods
+import org.json4s.{DefaultFormats, Extraction, JValue}
+import com.datarobot.enums.{VariableTypeTransform, DateExtractionUnits}
+
+import com.datarobot.Utilities._
+
+
+
 /** featurelist
   * @constructor
   * @param id (string) – the ID of the featurelist
@@ -23,4 +35,35 @@ case class Featurelist(
   description: Option[String]
 ) {
   override def toString = s"Featurelist(${name.get})"
+}
+
+object Featurelist {
+
+  implicit val jsonDefaultFormats = DefaultFormats
+
+  /** feature list related methods **/ 
+  def createFeaturelist(projectId: String, name: String, features:List[String])(implicit client: DataRobotClient) = {
+    val data = _getDataReady(Seq(
+      ("name", name),
+      ( "features", features)
+    ))
+    val r = client.postData(s"projects/${projectId}/featurelists/", data).asString
+    if(r.code == 201) {
+      parse(r.body).extract[Featurelist]
+    }
+    else {
+      throw new Exception(s"featurelist not successfully created")
+    }
+  }
+
+  def getFeaturelists(projectId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/featurelists/").asString
+    val JArray(json) = parse(r.body)
+    json.map{ j => j.extract[Featurelist] }
+  }
+
+  def delete(projectId: String, featurelistId: String)(implicit client: DataRobotClient) = {
+    client.delete(s"projects/${projectId}/featurelists/${featurelistId}/")
+  }
+  
 }

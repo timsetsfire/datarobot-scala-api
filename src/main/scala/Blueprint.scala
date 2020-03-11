@@ -1,4 +1,10 @@
 package com.datarobot
+import scala.util.Try
+import org.json4s._
+import org.json4s.jackson.Serialization.write
+import org.json4s.jackson.JsonMethods._
+import org.json4s.native.JsonMethods
+import org.json4s.{DefaultFormats, Extraction, JValue}
 
 
 /** Blueprint
@@ -22,5 +28,55 @@ case class Blueprint(
   monotonicDecreasingFeaturelistId: Option[String],
   supportsMonotonicConstraints: Option[Boolean]
 ) {
+  import Blueprint._
+
   override def toString = s"Blueprint(${modelType.get})"
+
+  // def getBlueprintChart()(implicit client:DataRobotClient) = Blueprint.getBlueprintChart(this.project.id.get, this.id.get) 
+
+  // def getBlueprintDocumentation()(implicit client:DataRobotClient) = Blueprint.getBlueprintDocumentation(this.project.id.get, this.id.get)
+
+}
+
+//case class BlueprintChart 
+
+//case class ModelBlueprintChart extends BlueprintChart 
+
+object Blueprint { 
+
+  implicit val jsonDefaultFormats = DefaultFormats
+
+  val path = "blueprints/"
+
+  def getBlueprints(projectId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/blueprints//").asString
+    val result = parse(r.body)
+    val JArray(ps) = result
+    ps.map(p => p.extract[Blueprint])
+  }
+  
+  def get(projectId: String, blueprintId: String)(implicit client: DataRobotClient) = { 
+    val r = client.get(s"projects/${projectId}/blueprints/${blueprintId}/").asString
+    val result = parse(r.body) // comding from jackson.JsonMethods
+    result.extract[Blueprint]
+  }
+
+  def getBlueprintChart(projectId: String, blueprintId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/blueprints/${blueprintId}/blueprintChart/").asString
+    val result = parse(r.body)
+    result.extract[Map[String, Any]]
+  }
+
+  def getReducedBlueprintChart(projectId: String, modelId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/models/${modelId}/blueprintChart/").asString
+    val result = parse(r.body)
+    result.extract[Map[String, Any]]
+  }
+
+  def getBlueprintDocumentation(projectId: String, blueprintId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/blueprints/${blueprintId}/blueprintDocs/").asString  
+    val result = parse(r.body)
+    result.extract[Map[String, Any]]
+  }
+  
 }

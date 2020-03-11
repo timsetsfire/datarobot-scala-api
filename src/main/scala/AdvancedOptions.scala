@@ -37,3 +37,11 @@ case class AdvancedOptions(
   defaultMonotonicDecreasingFeaturelistId: Option[String],
   onlyIncludeMonotonicBlueprints: Option[Boolean]
 )
+
+// use a string builder pattern matching on option
+// val c = scala.collection.mutable.Map[String, String]()
+// val x: Option[String] = None
+// x match {
+//     case Some(lines) => c.put("parameter", lines)
+//     case _ => Unit
+// }
