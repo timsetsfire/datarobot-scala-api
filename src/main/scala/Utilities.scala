@@ -17,6 +17,7 @@ object Utilities {
   object Waiter {
     def waitForAsyncResolution(url: String, maxWait: Int=600000)(implicit client: DataRobotClient) = {
       val baseTime = System.currentTimeMillis
+      
       def asyncHelper(r: String, maxWait: Int )(implicit client: DataRobotClient): IndexedSeq[String] = {
         val resp = client.get(r).asString
         if(System.currentTimeMillis - baseTime > maxWait) throw new Exception("timeout")
@@ -27,12 +28,22 @@ object Utilities {
             throw new Exception(s"The server gave an unexpected response. Status Code ${resp.code}: ${resp.body}")
           } else {
           asyncHelper(r, maxWait)
+          }
         }
       }
-    }
       val url2 = url.replace(client.endpoint, "")
       asyncHelper(url2, maxWait)
     }
   }
 
+
+
+  def caseClassToMap(cc: AnyRef) = {
+    cc.getClass.getDeclaredFields.foldLeft(Map.empty[String, Any]) { (a, f) =>
+    f.setAccessible(true)
+    a + (f.getName -> f.get(cc))  }  
+  }
+  
 }
+
+

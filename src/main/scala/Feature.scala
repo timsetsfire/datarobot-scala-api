@@ -57,6 +57,8 @@ import com.datarobot.enums.{VariableTypeTransform, DateExtractionUnits}
     override def toString = s"Feature(${name.get})"
 
     def getFeatureHistogram()(implicit client: DataRobotClient) = Feature.getFeatureHistogram(projectId.get, this.name.get)
+
+    def getMetrics()(implicit client: DataRobotClient) = Feature.getMetrics(projectId.get, name.get)
   }
 
   object Feature { 
@@ -71,25 +73,48 @@ import com.datarobot.enums.{VariableTypeTransform, DateExtractionUnits}
     }
 
     def get(projectId: String, featureName: String)(implicit client: DataRobotClient) = { 
-      val r = client.get(s"/projects/${projectId}/feature/${featureName}/").asString
+      val r = client.get(s"projects/${projectId}/feature/${featureName}/").asString
       parse(r.body).extract[Model]
     }
 
-//     get a feature historgram 
+// get a feature historgram 
 // feature transformations
 
     def getFeatureHistogram(projectId: String, featureName: String)(implicit client: DataRobotClient) = {
-      val r = client.get(s"/projects/${projectId}/featureHistograms/${featureName}/").asString
+      val r = client.get(s"projects/${projectId}/featureHistograms/${featureName}/").asString
       parse(r.body)
     }
 
-    def featureTransform(projectId: String, 
-                         featureName: String, 
-                         transformedFeatureName: String,
+    def getMetrics(projectId: String, featureName: String)(implicit client: DataRobotClient) = { 
+      val r = client.get(s"projects/${projectId}/features/metrics/").params( Seq("featureName" -> featureName)).asString
+      parse(r.body).extract[Map[String, Any]]      
+    }
+
+    def typeFeatureTransform(projectId: String, 
+                         //featureName: String, 
+                         //transformedFeatureName: String,
+                         name: String, 
+                         parentName: String, 
                          variableType: VariableTypeTransform.Value,
-                         replacement: Boolean, 
-                         dateExtraction: DateExtractionUnits.Value,
+                         replacement: Option[Boolean] = None, 
+                         dateExtraction: Option[DateExtractionUnits.Value] = None
     ) = throw new NotImplementedError("Not yet")
+
+    def dateExtractionTransformFeature(projectId: String, 
+      name: String,
+      parentName: String,
+      variableType: String,
+      replacement: Boolean,
+      dateExtraction: Option[DateExtractionUnits.Value] = None
+    )(implicit cient: DataRobotClient) = throw new NotImplementedError("Nope")
+
+    def batchTransformFeatures(projectId: String,
+      parentNames: Seq[String], 
+      variableType: DateExtractionUnits.Value, 
+      prefix: String,
+      suffix: String
+    )(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+    /** */ 
 
   }
 

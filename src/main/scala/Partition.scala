@@ -1,4 +1,7 @@
 package com.datarobot
+
+import com.datarobot.enums.{CVMethod, ValidationType}
+
 /** Partitioning for a given project
   * @constructor create a new Partition object
   * @param datetimeCol if a date partition column was used, the name of the column Note that datetimeCol applies to an old partitioning method no longer supported for new projects, as of API version v2.0.
@@ -18,18 +21,18 @@ split
   * @param useTimeSeries – (New in version v2.9) A boolean value indicating whether a time series project was created as opposed to a regular project using datetime partitioning.
   */
 case class Partition(
+  cvMethod: CVMethod.Value,
+  validationType: ValidationType.Value,
   datetimeCol: Option[String],
-  cvMethod: Option[String],
   datetimePartitionCol: Option[String],
   validationPct: Option[Double],
   reps: Option[Int],
   cvHoldoutLevel: Option[String],
   holdoutLevel: Option[String],
   userPartitionCol: Option[String],
-  validationType: Option[String],
   trainingLevel: Option[String],
   partitionKeyCols: Option[String],
   holdoutPct: Option[Double],
   validationLevel: Option[String],
   useTimeSeries: Option[Boolean]
-)
+) 

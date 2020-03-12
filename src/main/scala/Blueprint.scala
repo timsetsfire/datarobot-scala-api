@@ -32,15 +32,16 @@ case class Blueprint(
 
   override def toString = s"Blueprint(${modelType.get})"
 
-  def getBlueprintChart()(implicit client:DataRobotClient) = Blueprint.getBlueprintChart(this.project.id.get, this.id.get) 
+  def getBlueprintChart()(implicit client:DataRobotClient) = Blueprint.getBlueprintChart(this.projectId.get, this.id.get) 
 
-  def getBlueprintDocumentation()(implicit client:DataRobotClient) = Blueprint.getBlueprintDocumentation(this.project.id.get, this.id.get)
+  def getBlueprintDocumentation()(implicit client:DataRobotClient) = Blueprint.getBlueprintDocumentation(this.projectId.get, this.id.get)
 
-}
+  def getReducedBlueprintChart()(implicit client:DataRobotClient) = Blueprint.getReducedBlueprintChart(this.projectId.get, this.id.get)
 
 //case class BlueprintChart 
 
 //case class ModelBlueprintChart extends BlueprintChart 
+}
 
 object Blueprint { 
 

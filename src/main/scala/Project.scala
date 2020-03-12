@@ -10,6 +10,8 @@ import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
 import com.datarobot.Utilities._
 
+import com.datarobot.enums._
+
 /** Project
   * @constructor
     @param id – the ID of a project
@@ -60,22 +62,23 @@ case class Project(
     /** project */ 
     def delete()(implicit client: DataRobotClient)  = Project.delete(this.id.get)
 
-    def setTarget(target: String)(implicit client: DataRobotClient) = Project.setTarget(this.id.get, target)
+    //def setTarget(target: String)(implicit client: DataRobotClient) = Project.setTarget(this.id.get, target) // may redo this so modeling starts
+    // python args: target, mode='auto', metric=None, quickrun=None, worker_count=None, positive_class=None, partitioning_method=None, featurelist_id=None, advanced_options=None, max_wait=600, target_type=None)
 
     def setWorkerCount(wc: Int)(implicit client: DataRobotClient) = Project.setWorkerCount(this.id.get, wc)
 
-    def unlockHoldout()(implicit client: DataRobotClient) = {
-      val data = _getDataReady(Seq(("holdoutUnlocked", true)))
-      val r = Project.update(id.get, data)
-      holdoutUnlocked = Some(true)
-    }
+    // def unlockHoldout()(implicit client: DataRobotClient) = {
+    //   val data = _getDataReady(Seq(("holdoutUnlocked", true)))
+    //   val r = Project.update(id.get, data)
+    //   holdoutUnlocked = Some(true)
+    // }
 
-    def setProjectName(name: String)(implicit client: DataRobotClient)  = {
-      val data = _getDataReady(Seq(( "projectName", name)))
-      val r = Project.update(id.get, data)
-      projectName = Some(name)
-    }
-    /** */
+    // def setProjectName(name: String)(implicit client: DataRobotClient)  = {
+    //   val data = _getDataReady(Seq(( "projectName", name)))
+    //   val r = Project.update(id.get, data)
+    //   projectName = Some(name)
+    // }
+    // /** */
     
     /** blueprint */ 
     def getBlueprints()(implicit client: DataRobotClient)  = Blueprint.getBlueprints(this.id.get)
@@ -94,30 +97,9 @@ case class Project(
     /** features */ 
     def getFeature(featureName: String)(implicit client: DataRobotClient) = Feature.get(this.id.get, featureName)
     def getFeatures()(implicit client: DataRobotClient) = Feature.getFeatures(this.id.get)
+    def getMetrics(featureName: String)(implicit client: DataRobotClient) = Feature.getMetrics(this.id.get, featureName)
 
-    def typeTransformFeature(
-      name: String,
-      parentName: String,
-      variableType: String,
-      replacement: Boolean,
-      dateExtraction: String
-    )(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
-
-    def dateExtractionTransformFeature(
-      name: String,
-      parentName: String,
-      variableType: String,
-      replacement: Boolean,
-      dateExtraction: String
-    )(implicit cient: DataRobotClient) = throw new NotImplementedError("Nope")
-
-    def batchTransformFeatures(
-      parentNames: Seq[String], 
-      variableType: String, 
-      prefix: String,
-      suffix: String
-    )(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
-    /** */ 
+   
 
     /** featurelists */ 
     def createFeaturelist(name: String, features: List[String])(implicit client: DataRobotClient) = Featurelist.createFeaturelist(this.id.get, name, features)
@@ -169,7 +151,7 @@ object Project {
     client.postData(s"${path}", data=json).asString
   }
 
-  //
+
 
   def createModelingFeaturelist() = throw new NotImplementedError("Nope")
   def createTypeTransformFeature() = throw new NotImplementedError("Nope")
@@ -201,7 +183,7 @@ object Project {
   def getFeatures(projectId: String)(implicit client: DataRobotClient) = Feature.getFeatures(projectId)
   def getFrozenModels(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
   def getLeaderboardLink(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
-  def getMetrics(projectId: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
+
 
   def getModelJob(projectId: String, jobId: String)(implicit client: DataRobotClient) = {
     val r = client.get(s"${path}${projectId}/modelJobs/${jobId}/").asString
@@ -236,47 +218,94 @@ object Project {
     ps.map(p => p.extract[Project])
   }
 
-  // setters
-  def setTarget(projectId: String, target: String)(implicit client: DataRobotClient) = {
-    val data = _getDataReady(Seq(( "target", target)))
-    Project.update(projectId, data)
+ 
+  def setTarget(projectId: String, 
+                target: String,
+                mode: ModelingMode.Value = ModelingMode.AUTOPILOT, 
+                metric: Option[String] = None,
+                quickrun: Boolean = false, 
+                positiveClass: Option[String] = None,
+                partitioningMethod: Option[Partition] = None,
+                featurelistId: Option[String] = None, 
+                advancedOptions: Option[AdvancedOptions] = None,
+                maxWait: Int = 60000, // need enum for this
+                targetType: Option[TargetType.Value] = None, 
+                workerCount: Option[Int] = None)
+                (implicit client: DataRobotClient) = {
+
+                  val advOpt = advancedOptions match { 
+                    case Some(adv) => caseClassToMap(adv)
+                    case _ => Map()
+                  }
+                  val partitioning = partitioningMethod match { 
+                    case Some(part) => caseClassToMap(part)
+                    case _ => Map()
+                  }
+                  val st = Seq( "target"-> target,
+                                "metric" -> metric,
+                                "mode" -> ModelingMode.map(mode),
+                                "quickrun" -> quickrun,
+                                "featurelistId" -> featurelistId,
+                                "positiveClass" -> positiveClass,
+                                "targetType" -> targetType,
+                                "workerCount" -> workerCount
+                                )
+                  val data = _getDataReady(st ++ advOpt ++ partitioning)
+                  println(data)
+                  //need to fix
+                  println(client.endpoint + s"projects/${projectId}/aim/")
+                  client.patch(s"projects/${projectId}/aim/", data)
+                  //val asyncLocation = response.headers("Location")
+                  
+
+        //# Waits for project to be ready for modeling, but ignores the return value
+        //self.from_async(async_location, max_wait=max_wait)
+
+        //self.refresh()
   }
 
+   
   def setWorkerCount(projectId: String, workerCount: Int)(implicit client: DataRobotClient) = {
     val data = _getDataReady(Seq(("workerCount", workerCount)))
-    Project.update(projectId, data)
+    client.update(s"projects/${projectId}/", data)
   }
 
   def start(
     sourceData: String,
     target: String,
-    projectName: String = null.asInstanceOf[String],
+    projectName: Option[String] = None,
     workerCount: Option[Int] = None,
     metric: Option[String] = None,
     autoPilotOn: Boolean = true,
     blueprintThreshold: Option[Int] = Some(1),
-    partitioningMethod: Option[Partition],
-    postiveClass: Option[String] = None,
+    partitioningMethod: Option[Partition] = None,
+    positiveClass: Option[String] = None,
     targetType: Option[String] = None,
     mode: String = "autopilot",
     maxWait: Int = 600000
   )(implicit client: DataRobotClient) = {
-    val project = this.createFromFile(sourceData, projectName, maxWait)
+    // create project from data
+    val project = this.createFromFile(sourceData, projectName.getOrElse(sourceData), maxWait)
+    // set project target
+      
+    val initData: Seq[(String, Any)] = Seq(
+      "target" -> target,
+      "workerCount" -> workerCount,
+      "metric" -> metric,
+      "autoPilotOn" -> autoPilotOn,
+      "blueprintThreshold" -> blueprintThreshold,
+      "partitioningMethod" -> partitioningMethod,
+      "positiveClass" -> positiveClass,
+      "targetType" -> targetType,
+      "mode" -> mode,
+      "maxWait" -> maxWait
+    ).filter( _._1 != None)
+    val data = _getDataReady(initData)
 
-    // val initData = Seq(
-    //   "workerCount" -> workerCount,
-    //   "metric" -> metric,
-    //   "autoPilotOn" -> autoPilotOn,
-    //   "blueprintThreshold" -> blueprintThreshold,
-    //   "partitioningMethod" -> partitionMethod,
-    //   "positiveClass" -> positiveClass,
-    //   "targetType" -> targetType,
-    //   "mode" -> mode,
-    //   "maxWait" -> maxWait
-    // ).filter( _._1 != None)
-    // val data = throw new NotImplementedError("Nope") _getDataReady(Seq(  ))
+    client.patch(s"projects/${project.id.get}/aim", data)
 
-    this.setTarget(project.id.get, target)
+    Project.get(project.id.get)
+
   }
 
     // add in to set target and being
@@ -292,5 +321,5 @@ object Project {
   //   r}
 
   
-  def update(projectId: String, data: String)(implicit client: DataRobotClient) = client.patch(s"${path}${projectId}", data)
+  // def update(projectId: String, data: String)(implicit client: DataRobotClient) = client.patch(s"${path}${projectId}", data)
 }
