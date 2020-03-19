@@ -26,24 +26,25 @@ package com.datarobot
   * @param allowedPairwiseInteractionGroups (array) – (New in version v2.19) op- tional. For GAM models - specify groups of columns for which pairwise interactions will be allowed. E.g. if set to [[“A”, “B”, “C”], [“C”, “D”]] then GAM models will allow interactions between columns AxB, BxC, AxC, CxD. All others (AxD, BxD) will not be considered. If not specified - all possible interactions will be considered by model.
   */
 
+  
 case class AdvancedOptions(
   blueprintThreshold: Option[Int] = None,
-  responseCap: Option[Boolean] = None,
+  responseCap: Boolean = false,
   seed: Option[Int]= None,
   weights: Option[String]= None,
   rateTopPctThreshold: Option[Float]=None,
   offset: Option[String]= None,
   exposure: Option[String]= None,
   eventsCount: Option[String]= None,
-  smartDownsampled: Option[Boolean]= None,
+  smartDownsampled: Boolean= false,
   majorityDownsamplingRate: Option[Double]= None,
   downsampledMinorityRows: Option[Int]= None,
   downsampledMajorityRows: Option[Int]= None,
   accuracyOptimizedMb: Option[Boolean] = None,
-  scaleoutModelingMode: Option[String]= None,
+  scaleoutModelingMode: String = "disabled",
   monotonicIncreasingFeaturelistId: Option[String]= None,
   monotonicDecreasingFeaturelistId: Option[String]= None,
-  onlyIncludeMonotonicBlueprints: Option[Boolean]= None, 
+  onlyIncludeMonotonicBlueprints: Boolean = false, 
   blendBestModels: Boolean = true, 
   minSecondaryValidationModelCount: Int = 0,
   scoringCodeOnly: Boolean = false,

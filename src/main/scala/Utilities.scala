@@ -5,6 +5,7 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s._
 import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
+import org.apache.spark.sql.DataFrame
 object Utilities {
 
   implicit val jsonDefaultFormats = DefaultFormats
@@ -43,6 +44,18 @@ object Utilities {
     f.setAccessible(true)
     a + (f.getName -> f.get(cc))  }  
   }
+
+  case class DataFrameAsInputStream(df: DataFrame) extends java.io.InputStream { 
+    private val columns = df.columns.mkString("",",","\n").getBytes
+    private val data = df.rdd.map{ _.mkString("\"","\",\"","\"\n")}.flatMap(_.getBytes("UTF-8"))
+    override val available = data.count.toInt + columns.length
+    var bytes = columns.toIterator ++ data.toLocalIterator
+    def read(): Int = {
+      if(bytes.hasNext) bytes.next.toInt
+      else -1
+    }
+    override def markSupported(): Boolean = false
+}
   
 }
 

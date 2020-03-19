@@ -3,12 +3,13 @@ import scala.util.Try
 import java.io.{File, FileInputStream}
 import scalaj.http.MultiPart
 import org.json4s._
-import org.json4s.jackson.Serialization.write
+import org.json4s.jackson.Serialization.{write, formats}
 import org.json4s.jackson.JsonMethods._
 import org.json4s._
 import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
 import com.datarobot.Utilities._
+import com.datarobot.enums.EnumFormats.enumFormats
 
 import com.datarobot.enums._
 
@@ -37,25 +38,25 @@ case class Project(
   id: Option[String],
   var projectName: Option[String],
   fileName: Option[String],
-  stage: Option[String],
-  autopilotMode: Option[Double],
+  var stage: Option[String],
+  var autopilotMode: Option[Double],
   created: Option[String],
-  target: Option[String],
-  metric: Option[String],
-  partition: Option[Partition],
+  var target: Option[String],
+  var metric: Option[String],
+  var partition: Option[Partition],
   recommender: Option[Recommender],
-  advancedOptions: Option[AdvancedOptions],
-  positiveClass: Option[Double],
-  maxTrainPct: Option[Double],
-  maxTrainRows: Option[Double],
-  scaleoutMaxTrainPct: Option[Double],
-  scaleoutMaxTrainRows: Option[Double],
+  var advancedOptions: Option[AdvancedOptions],
+  var positiveClass: Option[Double],
+  var maxTrainPct: Option[Double],
+  var maxTrainRows: Option[Double],
+  var scaleoutMaxTrainPct: Option[Double],
+  var scaleoutMaxTrainRows: Option[Double],
   var holdoutUnlocked: Option[Boolean],
-  targetType: Option[String]) {
+  var targetType: Option[String]) {
   //
     import Project._
 
-    implicit val jsonDefaultFormats = DefaultFormats
+    
 
     override def toString = s"Project(${projectName.get})"
 
@@ -109,12 +110,32 @@ case class Project(
 
     def getModelJobs(status: String = null.asInstanceOf[String])(implicit client: DataRobotClient)  = Project.getModelJobs(this.id.get, status)
 
-  }
+
+    def setTarget(target: String,
+                mode: ModelingMode.Value = ModelingMode.AUTOPILOT, 
+                metric: Option[String] = None,
+                quickrun: Boolean = false, 
+                positiveClass: Option[String] = None,
+                partitioningMethod: Option[Partition] = None,
+                featurelistId: Option[String] = None, 
+                advancedOptions: Option[AdvancedOptions] = None,
+                maxWait: Int = 60000, // need enum for this
+                targetType: Option[TargetType.Value] = None, 
+                workerCount: Option[Int] = None)
+                (implicit client: DataRobotClient) = Project.setTarget(
+                  this.id.get, target, mode, metric, quickrun, positiveClass, partitioningMethod, featurelistId, advancedOptions, maxWait, targetType, workerCount)
+  
+    def refresh()(implicit client: DataRobotClient) = throw new NotImplementedError("not yet")
+                }
 
 
 object Project {
 
-  implicit val jsonDefaultFormats = DefaultFormats
+  
+  implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
+
+  // implicit val formats = Serialization.formats(NoTypeHints) + new PartitionSerializer
+
 
   val path = "projects/"
   //
@@ -126,6 +147,17 @@ object Project {
     val fs: java.io.InputStream = new java.io.FileInputStream(file)
     val bytesInStream = fs.available
     val dataMP = MultiPart(name= "file", filename = file, mime = "text/csv", data = fs, numBytes = bytesInStream, lenWritten => Unit)
+    val projectNameMP = MultiPart(name = "projectName", filename = "", mime = "text/plain", data = pName)
+    val status = client.postMulti("projects/", projectNameMP, dataMP)
+    val loc = Waiter.waitForAsyncResolution(status.headers("location")(0), maxWait)
+    Project.get(loc(0).replace(s"${client.endpoint}${this.path}", ""))
+  }
+
+  def createFromSparkDf(df: org.apache.spark.sql.DataFrame, projectName: String = null.asInstanceOf[String], maxWait: Int = 600000)(implicit client: DataRobotClient) = {
+    val fs = DataFrameAsInputStream(df)
+    val pName = if(projectName == null) "Spark DataFrame" else projectName
+    val bytesInStream = fs.available // 6309760
+    val dataMP = MultiPart(name= "file", filename = "Spark DataFrame", mime = "text/csv", data = fs, numBytes = bytesInStream, lenWritten => Unit)
     val projectNameMP = MultiPart(name = "projectName", filename = "", mime = "text/plain", data = pName)
     val status = client.postMulti("projects/", projectNameMP, dataMP)
     val loc = Waiter.waitForAsyncResolution(status.headers("location")(0), maxWait)
@@ -166,6 +198,10 @@ object Project {
   // getters
   def get(projectId: String)(implicit client: DataRobotClient) = {
     val r = client.get(s"${path}${projectId}/").asString
+    if(r.code == 410) {
+      val res = parse(r.body).extract[Map[String, Any]]
+      throw new Exception(s"GONE => ${res.getOrElse("message", "??")}")
+    }
     val result = parse(r.body) // comding from jackson.JsonMethods
     result.extract[Project]
   }
@@ -243,7 +279,7 @@ object Project {
                   }
                   val st = Seq( "target"-> target,
                                 "metric" -> metric,
-                                "mode" -> ModelingMode.map(mode),
+                                "mode" -> mode.id,
                                 "quickrun" -> quickrun,
                                 "featurelistId" -> featurelistId,
                                 "positiveClass" -> positiveClass,
@@ -267,7 +303,10 @@ object Project {
    
   def setWorkerCount(projectId: String, workerCount: Int)(implicit client: DataRobotClient) = {
     val data = _getDataReady(Seq(("workerCount", workerCount)))
-    client.update(s"projects/${projectId}/", data)
+    val response = client.patch(s"projects/${projectId}/", data)
+    if(response.code == 405) { 
+      throw new Exception("405 Method Not Allowed")
+    }
   }
 
   def start(
@@ -275,12 +314,12 @@ object Project {
     target: String,
     projectName: Option[String] = None,
     workerCount: Option[Int] = None,
-    metric: Option[String] = None,
+    metric: Option[AccuracyMetric.Value] = None,
     autoPilotOn: Boolean = true,
     blueprintThreshold: Option[Int] = Some(1),
     partitioningMethod: Option[Partition] = None,
     positiveClass: Option[String] = None,
-    targetType: Option[String] = None,
+    targetType: Option[TargetType.Value] = None,
     mode: String = "autopilot",
     maxWait: Int = 600000
   )(implicit client: DataRobotClient) = {
@@ -304,7 +343,7 @@ object Project {
 
     client.patch(s"projects/${project.id.get}/aim", data)
 
-    Project.get(project.id.get)
+    // Project.get(project.id.get)
 
   }
 
