@@ -14,7 +14,8 @@ object EnumFormats {
         new EnumNameSerializer(TargetType),
         new EnumNameSerializer(ValidationType),
         new EnumNameSerializer(VariableTypeTransform),
-
+        new EnumNameSerializer(FeatureAssociationMetric),
+        new EnumNameSerializer(FeatureAssociationType)
     )
 }
 
@@ -43,17 +44,17 @@ object AccuracyMetric extends Enumeration {
     val TWEEDIE_DEVIANCE = Value("Tweedie Deviance")
     val ALL_CLASSIFICATION = Seq(
         ACCURACY, AUC, BALANCED_ACCURACY, FVE_BINOMIAL, GINI_NORM,
-        KOLMOGOROV_SMIRNOV, LOGLOSS, RATE_TOP5, RATE_TOP10,
+        KOLMOGOROV_SMIRNOV, LOGLOSS, RATE_TOP5, RATE_TOP10
     )
     val ALL_REGRESSION = Seq(
         GAMMA_DEVIANCE, FVE_GAMMA, FVE_POISSON, FVE_TWEEDIE, MAD, MAE, MAPE,
-        POISSON_DEVIANCE, R_SQUARED, RMSE, RMSLE, TWEEDIE_DEVIANCE,
+        POISSON_DEVIANCE, R_SQUARED, RMSE, RMSLE, TWEEDIE_DEVIANCE
     )
     val ALL = Seq(
         ACCURACY, AUC, BALANCED_ACCURACY, FVE_BINOMIAL, GINI_NORM,
         KOLMOGOROV_SMIRNOV, LOGLOSS, RATE_TOP5, RATE_TOP10,
         GAMMA_DEVIANCE, FVE_GAMMA, FVE_POISSON, FVE_TWEEDIE, MAD, MAE, MAPE,
-        POISSON_DEVIANCE, R_SQUARED, RMSE, RMSLE, TWEEDIE_DEVIANCE,
+        POISSON_DEVIANCE, R_SQUARED, RMSE, RMSLE, TWEEDIE_DEVIANCE
     )
 }
 
@@ -82,6 +83,8 @@ object CVMethod extends Enumeration {
         val GROUP = Value("group")
     }
 
+
+
 object DateExtractionUnits extends Enumeration { 
     type DateExtractionUnits = Value 
     val YEAR = Value("year")
@@ -91,6 +94,30 @@ object DateExtractionUnits extends Enumeration {
     val WEEK =  Value("week")
     val WEEKDAY =  Value("weekDay")
 }
+
+object FeatureAssociationMetric extends Enumeration {
+        type FeatureAssociationMetric = Value
+        val MUTUALINFO = Value("mutualInfo")
+        val CRAMERSV = Value("cramersV")
+        val PEARSON = Value("pearson")
+        val SPEARMAN = Value("spearman")
+        val TAU = Value("tau")
+    }
+
+object FeatureAssociationType extends Enumeration {
+        type FeatureAssociationType = Value
+        val ASSOCIATION = Value("association")
+        val CORRELATION = Value("correlation")
+    }
+    
+
+object DefaultTimeout extends Enumeration { 
+    type DefaultTimeout = Value
+    val DEFAULT_MAX_WAIT = Value(600000)
+    val CONNECT = Value(605) // # time in seconds for the connection to server to be established
+    val READ = Value(60000)      // # time in seconds after which to conclude the server isn't responding anymore
+}
+
 
 
 object ModelingMode extends Enumeration { 
@@ -107,6 +134,16 @@ object ProjectStage extends Enumeration {
     val EDA=Value("eda")
     val EMPTY=Value("empty")
     val MODELING=Value("modeling")
+}
+
+object SharingRole extends Enumeration { 
+    type SharingRole = Value 
+    val OWNER= Value("OWNER")
+    val READ_WRITE= Value("READ_WRITE")
+    val USER= Value("USER")
+    val EDITOR= Value("EDITOR")
+    val READ_ONLY= Value("READ_ONLY")
+    val CONSUMER= Value("CONSUMER")
 }
     
 

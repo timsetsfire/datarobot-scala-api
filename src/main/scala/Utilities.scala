@@ -37,25 +37,29 @@ object Utilities {
     }
   }
 
-
-
   def caseClassToMap(cc: AnyRef) = {
     cc.getClass.getDeclaredFields.foldLeft(Map.empty[String, Any]) { (a, f) =>
     f.setAccessible(true)
     a + (f.getName -> f.get(cc))  }  
   }
 
-  case class DataFrameAsInputStream(df: DataFrame) extends java.io.InputStream { 
-    private val columns = df.columns.mkString("",",","\n").getBytes
-    private val data = df.rdd.map{ _.mkString("\"","\",\"","\"\n")}.flatMap(_.getBytes("UTF-8"))
-    override val available = data.count.toInt + columns.length
-    var bytes = columns.toIterator ++ data.toLocalIterator
+  case class DataFrameAsInputStream(df: org.apache.spark.sql.DataFrame) extends java.io.InputStream { 
+    val bytesDf = df.rdd.flatMap{ _.mkString("\"","\",\"","\"\n").getBytes("UTF-8")}
+    bytesDf.persist
+    val numBytesDf = bytesDf.count
+    val bytesColumns = df.columns.mkString("",",","\n").getBytes("UTF-8")
+    val numBytesColumns = bytesColumns.length
+    val numBytes: Long = numBytesDf + numBytesColumns
+    val bytes = bytesColumns.toIterator ++ bytesDf.toLocalIterator
     def read(): Int = {
-      if(bytes.hasNext) bytes.next.toInt
-      else -1
+        if(bytes.hasNext) bytes.next.toInt
+        else {
+          bytesDf.unpersist(true)
+          -1
+        }
     }
     override def markSupported(): Boolean = false
-}
+  }
   
 }
 

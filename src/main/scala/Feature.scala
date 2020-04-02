@@ -51,7 +51,7 @@ import com.datarobot.enums.{VariableTypeTransform, DateExtractionUnits}
     mean: Option[Double],
     median: Option[Double],
     stdDev: Option[Double],
-    targetLeakage: Option[String],
+    targetLeakage: Option[String]
   ) {
     
     override def toString = s"Feature(${name.get})"
@@ -74,7 +74,7 @@ import com.datarobot.enums.{VariableTypeTransform, DateExtractionUnits}
 
     def get(projectId: String, featureName: String)(implicit client: DataRobotClient) = { 
       val r = client.get(s"projects/${projectId}/feature/${featureName}/").asString
-      parse(r.body).extract[Model]
+      parse(r.body).extract[Feature]
     }
 
 // get a feature historgram 
@@ -119,3 +119,4 @@ import com.datarobot.enums.{VariableTypeTransform, DateExtractionUnits}
   }
 
   case class FeatureHistogram()
+

@@ -1,4 +1,4 @@
-scalaVersion := "2.12.10"
+scalaVersion := "2.11.8"
 
 ThisBuild / organization := "com.datarobot"
 
@@ -6,7 +6,7 @@ ThisBuild / organization := "com.datarobot"
 
 libraryDependencies  ++= Seq(
   // "com.lihaoyi" %% "ujson" % "0.7.5",
-  "com.lihaoyi" %% "requests" % "0.2.0",
+  // "com.lihaoyi" %% "requests" % "0.2.0",
   "org.scalaj" %% "scalaj-http" % "2.4.2",
   // "org.json4s" %% "json4s-native" % "3.6.7",
   // "org.json4s" %% "json4s-jackson" % "3.6.7"

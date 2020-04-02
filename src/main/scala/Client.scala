@@ -15,7 +15,7 @@ class DataRobotClient(token: String, val endpoint: String) {
     Http(s"${endpoint}${url}").headers(
       auth,
       ("Content-Type", contentType)
-    ).method("DELETE").asString
+    ).method("DELETE")
   }
 
   def postForm(url: String, data: Seq[(String,String)], contentType: String = "application/json") = {
@@ -34,15 +34,15 @@ class DataRobotClient(token: String, val endpoint: String) {
     Http(s"${endpoint}${url}").headers(
       auth,
       ("Content-Type", "multipart/form-data")
-    ).postMulti(mp:_*).asString
+    ).postMulti(mp:_*)
   }
 
   def patch(url: String, data: String, contentType: String = "application/json") = {
-    postData(url, data, contentType).method("PATCH").asString
+    postData(url, data, contentType).method("PATCH")
   }
 
   def update(url: String, data: String, contentType: String = "application/json") = {
-    postData(url, data, contentType).method("UPDATE").asString
+    postData(url, data, contentType).method("UPDATE")
   }
 
 }

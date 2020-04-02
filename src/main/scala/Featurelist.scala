@@ -63,7 +63,7 @@ object Featurelist {
   }
 
   def delete(projectId: String, featurelistId: String)(implicit client: DataRobotClient) = {
-    client.delete(s"projects/${projectId}/featurelists/${featurelistId}/")
+    client.delete(s"projects/${projectId}/featurelists/${featurelistId}/").asString
   }
   
 }

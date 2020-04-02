@@ -1,4 +1,24 @@
 package com.datarobot
+
+/** Jobs
+ * @param id (string) – the job ID of the job
+ * @param projectId (string) – the project the job belongs to
+ * @param status (string) – the status of the job - will be either ‘queue’, ‘inprogress’, ‘error’, ‘ABORTED’, or ‘COMPLETED’.
+ * @param jobType (string) – the type of the job
+ * @param isBlocked (boolean) – True if a job is waiting for its dependencies to be resolved first.
+ * @param url (string) – a url that can be used to request details about the job (note: if the job is of a type about which we do not have routes to return more details, then this will be a link back to this same generic job retrieval route)
+ */ 
+case class Job(
+  id: String,
+  projectId: String, 
+  status: String, 
+  jobType: String, 
+  isBlocked: Boolean,
+  url: String
+)
+
+
+
 /** ModelJob
   * @param status (string) – the status of the job - will be either ‘queue’, ‘inprogress’, ‘error’, ‘ABORTED’, or ‘COMPLETED’.
   * @param isBlocked (boolean) – True if a job is waiting for its dependencies to be resolved first.
@@ -14,21 +34,22 @@ for DataRobot Prime models, ‘blend’ for blender models, or ‘model’ for o
   * @param id (string) – the job id
   */
 case class ModelJob(
-  status: Option[String],
-  isBlocked: Option[Boolean],
-  processes: Option[Array[String]],
-  projectId: Option[String],
-  samplePct: Option[Float],
-  modelType: Option[String],
-  featurelistId: Option[String],
-  modelCategory: Option[String],
-  blueprintId: Option[String],
-  id: Option[String]
+  status: String,
+  isBlocked: Boolean,
+  processes: Array[String],
+  projectId: String,
+  samplePct: Float,
+  modelType: String,
+  featurelistId: String,
+  modelCategory: String,
+  blueprintId: String,
+  id: String
 ) {
 
   def delete()(implicit client: DataRobotClient) = ???
 
   def refresh()(implicit client: DataRobotClient) = ???
+
 }
 
 /** PredictJob
