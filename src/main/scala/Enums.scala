@@ -11,6 +11,7 @@ object EnumFormats {
         new EnumNameSerializer(CVMethod),
         new EnumNameSerializer(DateExtractionUnits),
         new EnumNameSerializer(ModelingMode),
+        new EnumNameSerializer(Source),
         new EnumNameSerializer(TargetType),
         new EnumNameSerializer(ValidationType),
         new EnumNameSerializer(VariableTypeTransform),
@@ -73,6 +74,7 @@ object BlenderMethod extends Enumeration {
     val FORECAST_DISTANCE_ENET=Value("FORECAST_DISTANCE_ENET")
     val FORECAST_DISTANCE_AVG=Value("FORECAST_DISTANCE_AVG")
 }
+
 
 object CVMethod extends Enumeration {
         type CVMethod = Value
@@ -144,6 +146,13 @@ object SharingRole extends Enumeration {
     val EDITOR= Value("EDITOR")
     val READ_ONLY= Value("READ_ONLY")
     val CONSUMER= Value("CONSUMER")
+}
+
+object Source extends Enumeration { 
+    type Source = Value 
+    val HOLDOUT = Value("holdout")
+    val CV = Value("crossValidation")
+    val VALIDATION = Value("validation")
 }
     
 

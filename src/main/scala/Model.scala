@@ -8,6 +8,13 @@ import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
 import com.datarobot.Utilities._getDataReady
 import com.datarobot.enums.EnumFormats.enumFormats
+import com.datarobot.enums._
+import com.datarobot.Utilities._
+import com.datarobot.Implicits._
+
+import java.util.jar.{JarOutputStream, JarInputStream}
+import java.io.{ByteArrayOutputStream, ByteArrayInputStream}
+  
 
 
 /** Model
@@ -61,6 +68,111 @@ class Model(
   implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
   override def toString = s"Model(${modelType})"
 
+
+
+  def getCapabilities()(implicit client: DataRobotClient) = Model.getCapabilities(projectId, id)
+
+  def getHyperParameters()(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/models/${id}/advancedTuning/parameters/").asString
+    val json = parse(r.body)
+    val temp = json.extract[Map[String, List[Map[String, Any]]]]
+    temp
+  }
+
+  def getModelCoefficients()(implicit client: DataRobotClient) = {
+     val r = client.get(s"projects/${projectId}/models/${id}/parameters/").asString
+     val map = r.code match { 
+       case 200 => parse(r.body).extract[Map[String,List[ Map[String,Any]]]]
+       case _ => throw new Exception(s"${r.code}: ${r.body}")
+     }
+     val coef = map("derivedFeatures").map{coefficientHelper}
+     val parameters = map("parameters")
+     val intercept = parameters.filter( m => m("name") == "Intercept") match { 
+       case List(s) => s.get("value").asInstanceOf[Option[Double]]
+       case _ => None
+     }
+     val link  = parameters.filter( m => m("name") == "Link function") match { 
+       case List(s) => s.get("value").asInstanceOf[Option[String]]
+       case _ => None
+     }
+     ModelCoefficients(id, coef, intercept, link)
+    //  (coef, parameters)
+  }
+
+  def getLiftCharts()(implicit client: DataRobotClient) = { 
+    val r = client.get(s"projects/${projectId}/models/${id}/liftChart/").asString
+    val json = parse(r.body)
+    json.extract[Map[String, List[LiftChart]]]
+  }
+
+  def getLiftChart(source: Source.Value)(implicit client: DataRobotClient) = { 
+    val r = client.get(s"projects/${projectId}/models/${id}/missingReport/").asString
+    r.code match { 
+      case 200 => parse(r.body).extract[LiftChart]
+      case _ => throw new Exception(s"${r.code}: ${r.body}")
+    }
+  } 
+
+  def getMissingValueReport()(implicit client: DataRobotClient) = { 
+    val r = client.get(s"projects/${projectId}/models/${id}/missingReport/").asString
+    parse(r.body).extract[Map[String, List[Map[String, Any]]]].getOrElse("missingValuesReport", List(Map()))
+  }
+
+  def getScoringCode(destination: Option[String] = None, sourceCode: Boolean = false)(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/models/${id}/scoringCode/").param("sourceCode", s"${sourceCode}").asBytes
+    val byteArrayOutputStream = new ByteArrayOutputStream()  //.getBytes("UTF-8")
+    r.code match { 
+      case 200 => byteArrayOutputStream.write(r.body)
+      case _ => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    (destination, sourceCode) match { 
+      case (Some(s), _) => byteArrayOutputStream.writeTo(new java.io.FileOutputStream(s))
+      case (None, true) => {
+        byteArrayOutputStream.writeTo(new java.io.FileOutputStream(s"${this.id}-source.jar"))
+      }
+      case (None, false) => {
+        byteArrayOutputStream.writeTo(new java.io.FileOutputStream(s"${this.id}.jar"))
+      }
+    }
+  }
+
+  def getRocCurves()(implicit client: DataRobotClient) = { 
+    val r = client.get(s"projects/${projectId}/models/${id}/rocCurve/").asString
+    val json = r.code match { 
+      case 200 => parse(r.body)
+      case _ => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    json.extract[Map[String, List[RocCurve]]]
+  }
+
+  def getRocCurve(source: Source.Value)(implicit client: DataRobotClient) = { 
+    val r = client.get(s"projects/${projectId}/models/${id}/rocCurve/${source}/").asString
+    r.code match { 
+      case 200 => parse(r.body).extract[RocCurve]
+      case _ => throw new Exception(s"${r.code}: ${r.body}")
+    }
+  } 
+
+  def getWordCloud()(implicit client: DataRobotClient) = { 
+    val r = client.get(s"projects/${projectId}/models/${id}/wordCloud/").asString
+    val map = r.code match { 
+      case 200 => parse(r.body).extract[Map[String, List[ NGram]]]
+      case _ => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    //WordCloud( map("ngrams"))
+    WordCloud(map("ngrams"))
+  }
+
+
+  def getResiduals()(implicit client: DataRobotClient) = { 
+    // needs work
+    val r = client.get(s"projects/${projectId}/models/${id}/residuals/").asString
+    r.code match { 
+      case 404 => throw new Exception(s"${r.code}: ${r.body}")
+      case _ => parse(r.body).extract[List[Map[String, Any]]].zipWithIndex
+    }
+  }
+
   def toggleStar(starred: Boolean)(implicit client: DataRobotClient) = {
     val params = Seq("isStarred" -> starred)
     val data = _getDataReady(params)
@@ -113,11 +225,31 @@ object Model {
 
   implicit val jsonDefaultFormats = DefaultFormats
 
+  
+
+  def getCapabilities(projectId: String, modelId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/models/${modelId}/supportedCapabilities/").asString
+    val json = r.code match { 
+       case 200 => parse(r.body)
+       case _ => throw new Exception(s"${r.code}: ${r.body}")
+     }
+    val map = json.extract[Map[String, Any]]
+     val reasons = map("reasons").asInstanceOf[Map[String, String]]
+     val capabilities = map.filter{ case(k,v) => k != "reasons"}.mapValues{ _.asInstanceOf[Boolean]}
+     (capabilities, reasons)
+  }
+
   def getFrozenModels(projectId: String)(implicit client: DataRobotClient) = {
     val r = client.get(s"projects/${projectId}/frozenModels/").asString
     val JObject(ls) = parse(r.body)
     val JArray(json) = ls(2)._2
     json.map { j => j.extract[FrozenModel] }
+  }
+
+  def getModel(projectId: String, modelId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/models/${modelId}/").asString
+    val json = parse(r.body)
+    json.extract[Model] 
   }
 
   def getModels(projectId: String)(implicit client: DataRobotClient) = {
@@ -134,7 +266,7 @@ object Model {
       .asString
     parse(r.body).extract[Model]
   }
-  
+
   def getRecommendedModels(
       projectId: String
   )(implicit client: DataRobotClient) = {

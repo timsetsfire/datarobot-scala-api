@@ -6,9 +6,10 @@ import org.json4s._
 import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
 import org.apache.spark.sql.DataFrame
+import com.datarobot.enums.EnumFormats.enumFormats
 object Utilities {
 
-  implicit val jsonDefaultFormats = DefaultFormats
+  implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
 
   def _getDataReady(data: Seq[(String, Any)]) = {
     write(data.toMap)
@@ -41,6 +42,17 @@ object Utilities {
     cc.getClass.getDeclaredFields.foldLeft(Map.empty[String, Any]) { (a, f) =>
     f.setAccessible(true)
     a + (f.getName -> f.get(cc))  }  
+  }
+
+  def coefficientHelper(map: Map[String, Any]) = {
+    Coefficient(
+        map("coefficient").asInstanceOf[Double],
+        map("originalFeature").asInstanceOf[String],
+        map("stageCoefficients").asInstanceOf[List[String]],
+        map("transformations").asInstanceOf[List[Map[String, String]]],
+        map("derivedFeature").asInstanceOf[String],
+        map("type").asInstanceOf[String]
+    )
   }
 
   case class DataFrameAsInputStream(df: org.apache.spark.sql.DataFrame) extends java.io.InputStream { 

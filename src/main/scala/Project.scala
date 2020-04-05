@@ -78,6 +78,21 @@ class Project(
     project
   }
   
+  def createBlender(models: List[Model], blenderMethod: BlenderMethod.Value)(implicit client: DataRobotClient) = {
+      val params = Seq("modelIds" -> models.map{ _.id}, "blenderMethod" -> blenderMethod)
+      val data = _getDataReady(params)
+      val r = client.postData(s"projects/${id}/blenderModels/", data).asString
+      val loc = r.code match { 
+        case 202 => r.headers("location")(0).replace(client.endpoint, "")
+        case _ => throw new Exception(s"${r.code}: ${r.body}")
+      }
+      val job = client.get(loc).asString 
+      job.code match { 
+        case 200 => parse(job.body).extract[ModelJob]
+        case _ => throw new Exception(s"${r.code}: ${r.body}")
+      }
+    }
+
   def createModelingFeaturelist() =
     throw new NotImplementedError("This is not a Timeseries project")
   def createTypeTransformFeature() =
@@ -86,7 +101,12 @@ class Project(
   def delete()(implicit client: DataRobotClient) = Project.delete(this.id)
 
   // /** */
-
+  def getBlenderEligibility(models: List[Model], blenderMethod: BlenderMethod.Value)(implicit client: DataRobotClient) = {
+    val params = Seq("modelIds" -> models.map{ _.id}, "blenderMethod" -> blenderMethod)
+    val data = _getDataReady(params)
+    val r = client.postData(s"projects/${id}/blenderModels/blendCheck/", data).asString
+    parse(r.body).extract[Map[String, Any]]
+  }
   /** blueprint */
   def getBlueprints()(implicit client: DataRobotClient) =
     Blueprint.getBlueprints(this.id)
@@ -112,6 +132,8 @@ class Project(
   /** models */
   def getModels()(implicit client: DataRobotClient) =
     Model.getModels(this.id)
+  def getModel(modelId: String)(implicit client: DataRobotClient) =
+    Model.getModel(this.id, modelId)
   def getFrozenModels()(implicit client: DataRobotClient) =
     Model.getFrozenModels(this.id)
 
@@ -392,7 +414,7 @@ class Project(
     val data = _getDataReady(params)
     val r = client.postData(s"${path}${this.id}/models/", data).asString
     val loc = r.code match { 
-      case 200 => r.headers("location")(0).replace(client.endpoint, "")
+      case 202 => r.headers("location")(0).replace(client.endpoint, "")
       case _ => throw new Exception(s"${r.code}: ${r.body}")
     }
     val job = client.get(loc).asString 

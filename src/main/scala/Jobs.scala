@@ -46,6 +46,7 @@ case class ModelJob(
   id: String
 ) {
 
+    
   def delete()(implicit client: DataRobotClient) = ???
 
   def refresh()(implicit client: DataRobotClient) = ???
