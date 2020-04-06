@@ -1,0 +1,706 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>datarobot - com.datarobot</title>
+          <meta name="description" content="datarobot - com.datarobot" />
+          <meta name="keywords" content="datarobot com.datarobot" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../lib/template.js"></script>
+      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'com.datarobot.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="value">
+      <div id="definition">
+        <img alt="Package" src="../../lib/package_big.png" />
+        <p id="owner"><a href="../package.html" class="extype" name="com">com</a></p>
+        <h1>datarobot</h1><span class="permalink">
+      <a href="../../index.html#com.datarobot.package" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <span class="name">datarobot</span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        
+        
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="com.datarobot.AdvancedOptions" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="AdvancedOptionsextendsProductwithSerializable"></a>
+      <a id="AdvancedOptions:AdvancedOptions"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="AdvancedOptions.html"><span class="name">AdvancedOptions</span></a><span class="params">(<span name="blueprintThreshold">blueprintThreshold: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="responseCap">responseCap: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="seed">seed: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="weights">weights: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="rateTopPctThreshold">rateTopPctThreshold: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Float">Float</span>] = <span class="symbol">None</span></span>, <span name="offset">offset: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="exposure">exposure: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="eventsCount">eventsCount: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="smartDownsampled">smartDownsampled: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="majorityDownsamplingRate">majorityDownsamplingRate: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">None</span></span>, <span name="downsampledMinorityRows">downsampledMinorityRows: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="downsampledMajorityRows">downsampledMajorityRows: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="accuracyOptimizedMb">accuracyOptimizedMb: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>] = <span class="symbol">None</span></span>, <span name="scaleoutModelingMode">scaleoutModelingMode: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;disabled&quot;</span></span>, <span name="defaultMonotonicIncreasingFeaturelistId">defaultMonotonicIncreasingFeaturelistId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="defaultMonotonicDecreasingFeaturelistId">defaultMonotonicDecreasingFeaturelistId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="onlyIncludeMonotonicBlueprints">onlyIncludeMonotonicBlueprints: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="blendBestModels">blendBestModels: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="minSecondaryValidationModelCount">minSecondaryValidationModelCount: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>, <span name="scoringCodeOnly">scoringCodeOnly: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="prepareModelForDeployment">prepareModelForDeployment: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="allowedPairwiseInteractionGroups">allowedPairwiseInteractionGroups: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]]] = <span class="symbol">None</span></span>, <span name="featureSettings">featureSettings: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Seq">Seq</span>[<a href="FeatureSetting.html" class="extype" name="com.datarobot.FeatureSetting">FeatureSetting</a>]] = <span class="symbol">None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@AdvancedOptionsextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">blueprintThreshold</dt><dd class="cmt"><p>– an upper bound on running time (in hours), such that models exceeding the bound will be excluded in subsequent autopilot runs</p></dd><dt class="param">responseCap</dt><dd class="cmt"><p>– defaults to False, if specified used to cap the maximum response of a model</p></dd><dt class="param">seed</dt><dd class="cmt"><p>– defaults to null, the random seed to be used if specified</p></dd><dt class="param">weights</dt><dd class="cmt"><p>– the name of the weight column, if specified, otherwise null.</p></dd><dt class="param">rateTopPctThreshold</dt><dd class="cmt"><p>- Optional, the percentage threshold between 0.1 and 50 for specifying the Rate@Top% metric.</p></dd><dt class="param">offset</dt><dd class="cmt"><p>– the list of names of the offset columns, if specified, other- wise null.</p></dd><dt class="param">exposure</dt><dd class="cmt"><p>– the name of the exposure column, if specified, other- wise null.</p></dd><dt class="param">eventsCount</dt><dd class="cmt"><p>– the name of the event count column, if specified, otherwise null.</p></dd><dt class="param">smartDownsampled</dt><dd class="cmt"><p>(bool) – whether the project uses smart downsampling to throw away excess rows of the majority class. Smart downsampled projects express all sample percents in terms of percent of minority rows (as opposed to percent of all rows).</p></dd><dt class="param">majorityDownsamplingRate</dt><dd class="cmt"><p>(float) – the percentage be- tween 0 and 100 of the majority rows that are kept, or null for projects without smart down- sampling</p></dd><dt class="param">downsampledMinorityRows</dt><dd class="cmt"><p>(int) – the total number of the minority rows available for modeling, or null for projects without smart downsampling</p></dd><dt class="param">downsampledMajorityRows</dt><dd class="cmt"><p>(int) – the total number of the majority rows available for modeling, or null for projects without smart downsampling</p></dd><dt class="param">scaleoutModelingMode</dt><dd class="cmt"><p>(string) – Specifies the behavior of Scaleout models for the project. This is one of disabled, repositoryOnly, autopilot</p></dd><dt class="param">onlyIncludeMonotonicBlueprints</dt><dd class="cmt"><p>– boolean (default to False), whether the project only includes blueprints support enforcing monotonic constraints</p></dd><dt class="param">blendBestModels</dt><dd class="cmt"><p>(bool) –) optional, defaults to True. Blend best models during Autopilot run.</p></dd><dt class="param">minSecondaryValidationModelCount</dt><dd class="cmt"><p>(bool) –) optional, defaults to 0. Compute “All backtest” scores (datetime models) or cross validation scores for the specified number of highest ranking models on the Leaderboard, if over the Autopilot default.</p></dd><dt class="param">scoringCodeOnly</dt><dd class="cmt"><p>(bool) –) optional, defaults to False. Keep only models that can be converted to scorable java code during Autopilot run.</p></dd><dt class="param">prepareModelForDeployment</dt><dd class="cmt"><p>(bool) –) optional, defaults to True. Prepare model for deployment during Autopilot run. The preparation includes creating reduced feature list models, retraining best model on higher sample size, computing insights and assigning “RECOMMENDED FOR DEPLOYMENT” label.</p></dd><dt class="param">allowedPairwiseInteractionGroups</dt><dd class="cmt"><p>(array) –) op- tional. For GAM models - specify groups of columns for which pairwise interactions will be allowed. E.g. if set to <span class="extype" name="“A”,">“B”, “C”], [“C”, “D”</span> then GAM models will allow interactions between columns AxB, BxC, AxC, CxD. All others (AxD, BxD) will not be considered. If not specified - all possible interactions will be considered by model.</p></dd></dl></div>
+    </li><li name="com.datarobot.AdvancedTuningSession" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="AdvancedTuningSessionextendsProductwithSerializable"></a>
+      <a id="AdvancedTuningSession:AdvancedTuningSession"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="AdvancedTuningSession.html"><span class="name">AdvancedTuningSession</span></a><span class="params">(<span name="model">model: <a href="Model.html" class="extype" name="com.datarobot.Model">Model</a></span>, <span name="description">description: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="client">client: <a href="DataRobotClient.html" class="extype" name="com.datarobot.DataRobotClient">DataRobotClient</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@AdvancedTuningSessionextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">model</dt><dd class="cmt"><p>model to be tuned</p></dd><dt class="param">description</dt><dd class="cmt"><p>description of the tuning session</p></dd></dl></div>
+    </li><li name="com.datarobot.Blueprint" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="BlueprintextendsProductwithSerializable"></a>
+      <a id="Blueprint:Blueprint"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Blueprint.html"><span class="name">Blueprint</span></a><span class="params">(<span name="projectId">projectId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="processes">processes: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>, <span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="modelType">modelType: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="blueprintCategory">blueprintCategory: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="monotonicIncreasingFeaturelistId">monotonicIncreasingFeaturelistId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="monotonicDecreasingFeaturelistId">monotonicDecreasingFeaturelistId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="supportsMonotonicConstraints">supportsMonotonicConstraints: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@BlueprintextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Blueprint</p><div class="fullcomment"><div class="comment cmt"><p>Blueprint</p></div><dl class="paramcmts block"><dt class="param">projectId</dt><dd class="cmt"><p>(string) – the project the blueprint belongs to</p></dd><dt class="param">processes</dt><dd class="cmt"><p>(array) – a list of strings representing processes the blueprint uses</p></dd><dt class="param">id</dt><dd class="cmt"><p>(string) – the blueprint ID of this blueprint - note that this is not an ObjectId</p></dd><dt class="param">modelType</dt><dd class="cmt"><p>(string) – the model this blueprint will produce</p></dd><dt class="param">blueprintCategory</dt><dd class="cmt"><p>(string) – (New in version v2.6) describes the category of the blueprint and indicates the kind of model this blueprint produces. Will be either “DataRobot” or “Scaleout DataRobot”.</p></dd><dt class="param">monotonicIncreasingFeaturelistId</dt><dd class="cmt"><p>– (new in v2.11) null or str, the ID of the featurelist that defines the set of features with a monotonically increasing relationship to the target. If null, no such constraints are enforced.</p></dd><dt class="param">monotonicDecreasingFeaturelistId</dt><dd class="cmt"><p>– (new in v2.11) null or str, the ID of the featurelist that defines the set of features with a monotonically decreasing relationship to the target. If null, no such constraints are enforced.</p></dd><dt class="param">supportsMonotonicConstraints</dt><dd class="cmt"><p>– (new in v2.11) boolean, whether this model supports enforcing montonic constraints</p></dd></dl></div>
+    </li><li name="com.datarobot.Coefficient" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CoefficientextendsProductwithSerializable"></a>
+      <a id="Coefficient:Coefficient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Coefficient.html"><span class="name">Coefficient</span></a><span class="params">(<span name="coefficient">coefficient: <span class="extype" name="scala.Double">Double</span></span>, <span name="originalFeature">originalFeature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="stageCoefficients">stageCoefficients: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="transformations">transformations: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>]]</span>, <span name="derivedFeature">derivedFeature: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="type">type: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@CoefficientextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.DataRobotClient" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DataRobotClientextendsAnyRef"></a>
+      <a id="DataRobotClient:DataRobotClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DataRobotClient.html"><span class="name">DataRobotClient</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@DataRobotClientextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Feature" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="FeatureextendsProductwithSerializable"></a>
+      <a id="Feature:Feature"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Feature.html"><span class="name">Feature</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="projectId">projectId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="featureType">featureType: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="importance">importance: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="lowInformation">lowInformation: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>, <span name="uniqueCount">uniqueCount: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="naCount">naCount: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="dateFormat">dateFormat: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="timeSeriesEligible">timeSeriesEligible: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>, <span name="timeSeriesEligibilityReason">timeSeriesEligibilityReason: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="timeUnit">timeUnit: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="timeStep">timeStep: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="min">min: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="max">max: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="mean">mean: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="median">median: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="stdDev">stdDev: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="targetLeakage">targetLeakage: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@FeatureextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Feature</p><div class="fullcomment"><div class="comment cmt"><p>Feature</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>(int) – the feature ID. (Note: Throughout the API, features are specified using their names, not this ID.)</p></dd><dt class="param">name</dt><dd class="cmt"><p>(string) – feature name</p></dd><dt class="param">projectId</dt><dd class="cmt"><p>(string) – the ID of the project the feature belongs to</p></dd><dt class="param">featureType</dt><dd class="cmt"><p>(string) – feature type: ‘Numeric’, ‘Categorical’, etc.</p></dd><dt class="param">importance</dt><dd class="cmt"><p>(float) – numeric measure of the strength of relationship between the feature and target (independent of any model or other features)</p></dd><dt class="param">lowInformation</dt><dd class="cmt"><p>(bool) – whether feature has too few values to be informative</p></dd><dt class="param">uniqueCount</dt><dd class="cmt"><p>(int) – number of unique values</p></dd><dt class="param">naCount</dt><dd class="cmt"><p>(int) – number of missing values</p></dd><dt class="param">dateFormat</dt><dd class="cmt"><p>(string)–(Newinversionv2.5)thedateformatstringforhowthisfeature was interpreted (or null if not a date feature). If not null, it will be compatible with https: //docs.python.org/2/library/time.html#time.strftime .</p></dd><dt class="param">timeSeriesEligible</dt><dd class="cmt"><p>(bool) – (New in version v2.8) whether this feature can be used as a datetime partitioning feature for time series projects. Only sufficiently regular date features can be selected as the datetime feature for time series projects. Always false for non-date features. Date features that cannot be used in datetime partitioning for a time series project may be eligible for an OTV project, which has less stringent requirements.</p></dd><dt class="param">timeSeriesEligibilityReason</dt><dd class="cmt"><p>(string)–(Newinversionv2.8)whythefeature is ineligible for time series projects, or “suitable” if it is eligible.</p></dd><dt class="param">timeUnit</dt><dd class="cmt"><p>(string) – (New in version v2.8) the unit for the interval between values of this feature, e.g. DAY, MONTH, HOUR. When specifying windows for time series projects, the windows are expressed in terms of this unit. Only present for date features eligible for time series projects, and null otherwise.</p></dd><dt class="param">timeStep</dt><dd class="cmt"><p>(int) – (New in version v2.8) The minimum time step that can be used to specify time series windows. The units for this value are the timeUnit. When specifying windows for time series projects, all windows must have durations that are integer multiples of this number. Only present for date features that are eligible for time series projects and null otherwise.</p></dd><dt class="param">min</dt><dd class="cmt"><p>– minimum value of the EDA sample of the feature.</p></dd><dt class="param">max</dt><dd class="cmt"><p>– maximum value of the EDA sample of the feature.</p></dd><dt class="param">mean</dt><dd class="cmt"><p>– arithmetic mean of the EDA sample of the feature.</p></dd><dt class="param">median</dt><dd class="cmt"><p>– median of the EDA sample of the feature.</p></dd><dt class="param">stdDev</dt><dd class="cmt"><p>– standard deviation of EDA sample of the feature.</p></dd><dt class="param">targetLeakage</dt><dd class="cmt"><p>(int) – whether or not the feature has target leakage. ‘SKIPPED_DETECTION’ indicates leakage detection was not run on the feature, ‘FALSE’ indicates no leakage, ‘MODERATE_RISK’ indicates a moderate risk of target leakage, and ‘HIGH_RISK’ indicates a high risk of target leakage</p></dd></dl></div>
+    </li><li name="com.datarobot.FeatureHistogram" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FeatureHistogramextendsProductwithSerializable"></a>
+      <a id="FeatureHistogram:FeatureHistogram"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FeatureHistogram.html"><span class="name">FeatureHistogram</span></a><span class="params">()</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@FeatureHistogramextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.FeatureSetting" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="FeatureSettingextendsProductwithSerializable"></a>
+      <a id="FeatureSetting:FeatureSetting"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FeatureSetting.html"><span class="name">FeatureSetting</span></a><span class="params">(<span name="featureName">featureName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="aprior">aprior: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>] = <span class="symbol">None</span></span>, <span name="knownInAdvance">knownInAdvance: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>] = <span class="symbol">None</span></span>, <span name="doNotDerive">doNotDerive: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@FeatureSettingextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">FeatureSetting</p><div class="fullcomment"><div class="comment cmt"><p>FeatureSetting</p></div><dl class="paramcmts block"><dt class="param">featureName</dt><dd class="cmt"><p>(string) – The name of the feature being specified.</p></dd><dt class="param">knownInAdvance</dt><dd class="cmt"><p>(boolean)–(Newinversionv2.11)Optional,fortimeseriesprojects only. Sets whether the feature is known in advance, i.e., values for future dates are known at prediction time. If not specified, the feature uses the value from the defaultToKnownInAd- vance flag.</p></dd><dt class="param">doNotDerive</dt><dd class="cmt"><p>(boolean) – (New in version v2.17) Optional, for time series projects only. Sets whether the feature is do-not-derive, i.e., is excluded from feature derivation. If not specified, the feature uses the value from the defaultToDoNotDerive flag.</p></dd></dl></div>
+    </li><li name="com.datarobot.Featurelist" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="FeaturelistextendsProductwithSerializable"></a>
+      <a id="Featurelist:Featurelist"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Featurelist.html"><span class="name">Featurelist</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="projectId">projectId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="name">name: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="features">features: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]]</span>, <span name="numModels">numModels: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>]</span>, <span name="created">created: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="isUserCreated">isUserCreated: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="description">description: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@FeaturelistextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">featurelist</p><div class="fullcomment"><div class="comment cmt"><p>featurelist</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>(string) – the ID of the featurelist</p></dd><dt class="param">projectId</dt><dd class="cmt"><p>(string) – the ID of the project the featurelist belongs to</p></dd><dt class="param">name</dt><dd class="cmt"><p>(string) – the name of the featurelist</p></dd><dt class="param">features</dt><dd class="cmt"><p>(array) – a json array of names of features included in the featurelist</p></dd><dt class="param">numModels</dt><dd class="cmt"><p>(int) – (New in version v2.13) the number of models that currently use this featurelist. A model is considered to use a featurelist if it is used to train the model or as a monotonic constraint featurelist, or if the model is a blender with at least one component model using the featurelist.</p></dd><dt class="param">created</dt><dd class="cmt"><p>(string) – (New in version v2.13) a timestamp string specifying when the featurelist was created</p></dd><dt class="param">isUserCreated</dt><dd class="cmt"><p>(boolean) – (New in version v2.13) whether the featurelist was cre- ated manually by a user or by DataRobot automation</p></dd><dt class="param">description</dt><dd class="cmt"><p>(string) – (New in version v2.13) a user-friendly description of the fea- turelist, which can be updated by users</p></dd></dl></div>
+    </li><li name="com.datarobot.FrozenModel" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FrozenModelextendsModel"></a>
+      <a id="FrozenModel:FrozenModel"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FrozenModel.html"><span class="name">FrozenModel</span></a><span class="result"> extends <a href="Model.html" class="extype" name="com.datarobot.Model">Model</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@FrozenModelextendsModel" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Job" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="JobextendsProductwithSerializable"></a>
+      <a id="Job:Job"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Job.html"><span class="name">Job</span></a><span class="params">(<span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="projectId">projectId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="status">status: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="jobType">jobType: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isBlocked">isBlocked: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="url">url: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@JobextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Jobs</p><div class="fullcomment"><div class="comment cmt"><p>Jobs</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>(string) – the job ID of the job</p></dd><dt class="param">projectId</dt><dd class="cmt"><p>(string) – the project the job belongs to</p></dd><dt class="param">status</dt><dd class="cmt"><p>(string) – the status of the job - will be either ‘queue’, ‘inprogress’, ‘error’, ‘ABORTED’, or ‘COMPLETED’.</p></dd><dt class="param">jobType</dt><dd class="cmt"><p>(string) – the type of the job</p></dd><dt class="param">isBlocked</dt><dd class="cmt"><p>(boolean) – True if a job is waiting for its dependencies to be resolved first.</p></dd><dt class="param">url</dt><dd class="cmt"><p>(string) – a url that can be used to request details about the job (note: if the job is of a type about which we do not have routes to return more details, then this will be a link back to this same generic job retrieval route)</p></dd></dl></div>
+    </li><li name="com.datarobot.LiftChart" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LiftChartextendsProductwithSerializable"></a>
+      <a id="LiftChart:LiftChart"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="LiftChart.html"><span class="name">LiftChart</span></a><span class="params">(<span name="source">source: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bins">bins: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Double">Double</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@LiftChartextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Model" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ModelextendsAnyRef"></a>
+      <a id="Model:Model"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Model.html"><span class="name">Model</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@ModelextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Model</p>
+    </li><li name="com.datarobot.ModelCoefficients" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ModelCoefficientsextendsProductwithSerializable"></a>
+      <a id="ModelCoefficients:ModelCoefficients"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ModelCoefficients.html"><span class="name">ModelCoefficients</span></a><span class="params">(<span name="modelId">modelId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="coefficients">coefficients: <span class="extype" name="scala.List">List</span>[<a href="Coefficient.html" class="extype" name="com.datarobot.Coefficient">Coefficient</a>]</span>, <span name="intercept">intercept: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">None</span></span>, <span name="link">link: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@ModelCoefficientsextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.ModelJob" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ModelJobextendsProductwithSerializable"></a>
+      <a id="ModelJob:ModelJob"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ModelJob.html"><span class="name">ModelJob</span></a><span class="params">(<span name="status">status: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="isBlocked">isBlocked: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="processes">processes: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="projectId">projectId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="samplePct">samplePct: <span class="extype" name="scala.Float">Float</span></span>, <span name="modelType">modelType: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="featurelistId">featurelistId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="modelCategory">modelCategory: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="blueprintId">blueprintId: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="id">id: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@ModelJobextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">ModelJob</p><div class="fullcomment"><div class="comment cmt"><p>ModelJob</p></div><dl class="paramcmts block"><dt class="param">status</dt><dd class="cmt"><p>(string) – the status of the job - will be either ‘queue’, ‘inprogress’, ‘error’, ‘ABORTED’, or ‘COMPLETED’.</p></dd><dt class="param">isBlocked</dt><dd class="cmt"><p>(boolean) – True if a job is waiting for its dependencies to be resolved first.
+ 280 Chapter31. APIReference</p></dd><dt class="param">processes</dt><dd class="cmt"><p>(array) – a json array of processes the modeling job includes</p></dd><dt class="param">projectId</dt><dd class="cmt"><p>(string) – the project the job is running within</p></dd><dt class="param">samplePct</dt><dd class="cmt"><p>(float) – the percentage of the dataset the job is using</p></dd><dt class="param">modelType</dt><dd class="cmt"><p>(string) – the type of model used by the job</p></dd><dt class="param">featurelistId</dt><dd class="cmt"><p>(string) – the featurelist the model is using</p></dd><dt class="param">modelCategory</dt><dd class="cmt"><p>(string)–indicatesthetypeofmodelusedbythejob-either‘prime’
+for DataRobot Prime models, ‘blend’ for blender models, or ‘model’ for other cases</p></dd><dt class="param">blueprintId</dt><dd class="cmt"><p>(string) – the blueprint used by the model - note that this is not an ObjectId</p></dd><dt class="param">id</dt><dd class="cmt"><p>(string) – the job id</p></dd></dl></div>
+    </li><li name="com.datarobot.NGram" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NGramextendsProductwithSerializable"></a>
+      <a id="NGram:NGram"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="NGram.html"><span class="name">NGram</span></a><span class="params">(<span name="count">count: <span class="extype" name="scala.Int">Int</span></span>, <span name="coefficient">coefficient: <span class="extype" name="scala.Double">Double</span></span>, <span name="ngram">ngram: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="variable">variable: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="class">class: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="frequency">frequency: <span class="extype" name="scala.Double">Double</span></span>, <span name="isStopword">isStopword: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@NGramextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Partition" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="PartitionextendsProductwithSerializable"></a>
+      <a id="Partition:Partition"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Partition.html"><span class="name">Partition</span></a><span class="params">(<span name="cvMethod">cvMethod: <a href="enums/CVMethod$.html#ValueextendsOrdered[Enumeration.this.Value]withSerializable" class="extmbr" name="com.datarobot.enums.CVMethod.Value">enums.CVMethod.Value</a></span>, <span name="validationType">validationType: <a href="enums/ValidationType$.html#ValueextendsOrdered[Enumeration.this.Value]withSerializable" class="extmbr" name="com.datarobot.enums.ValidationType.Value">enums.ValidationType.Value</a></span>, <span name="datetimeCol">datetimeCol: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="datetimePartitionCol">datetimePartitionCol: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="validationPct">validationPct: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">None</span></span>, <span name="reps">reps: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Int">Int</span>] = <span class="symbol">None</span></span>, <span name="cvHoldoutLevel">cvHoldoutLevel: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="holdoutLevel">holdoutLevel: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="userPartitionCol">userPartitionCol: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="trainingLevel">trainingLevel: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="partitionKeyCols">partitionKeyCols: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="holdoutPct">holdoutPct: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">None</span></span>, <span name="validationLevel">validationLevel: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="useTimeSeries">useTimeSeries: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@PartitionextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Partitioning for a given project</p><div class="fullcomment"><div class="comment cmt"><p>Partitioning for a given project</p></div><dl class="paramcmts block"><dt class="param">cvMethod</dt><dd class="cmt"><p>the partitioning method used, will be either “random”, “stratified”, “date- time”, “user”, “group”, or “date”. Note that “date” partitioning is an old partitioning method no longer supported for new projects, as of API version v2.0.</p></dd><dt class="param">validationType</dt><dd class="cmt"><p>– either CV for cross-validation or TVH for train-validation-holdout
+split</p></dd><dt class="param">datetimeCol</dt><dd class="cmt"><p>if a date partition column was used, the name of the column Note that datetimeCol applies to an old partitioning method no longer supported for new projects, as of API version v2.0.</p></dd><dt class="param">datetimePartitionCol</dt><dd class="cmt"><p>if a datetime partition column was used, the name of the column</p></dd><dt class="param">validationPct</dt><dd class="cmt"><p>if train-validation-holdoutsplitwasused,thepercentageofthedataset used for the validation set</p></dd><dt class="param">reps</dt><dd class="cmt"><p>if cross validation was used, the number of folds to use</p></dd><dt class="param">cvHoldoutLevel</dt><dd class="cmt"><p>if a user partition column was used with cross validation, the value</p></dd><dt class="param">holdoutLevel</dt><dd class="cmt"><p>if a user partition column was used with train-validation-holdout split, the value assigned to the holdout set</p></dd><dt class="param">userPartitionCol</dt><dd class="cmt"><p>– if a user partition column was used, the name of the column</p></dd><dt class="param">trainingLevel</dt><dd class="cmt"><p>– if a user partition column was used with train-validation-holdoutsplit, the value assigned to the training set</p></dd><dt class="param">partitionKeyCols</dt><dd class="cmt"><p>– if group partitioning was used, the name of the column.</p></dd><dt class="param">holdoutPct</dt><dd class="cmt"><p>– the percentage of the dataset reserved for the holdout set</p></dd><dt class="param">validationLevel</dt><dd class="cmt"><p>– if a user partition column was used with train-validation-holdout split, the value assigned to the validation set</p></dd><dt class="param">useTimeSeries</dt><dd class="cmt"><p>– (New in version v2.9) A boolean value indicating whether a time series project was created as opposed to a regular project using datetime partitioning.</p></dd></dl></div>
+    </li><li name="com.datarobot.PredictJob" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PredictJobextendsProductwithSerializable"></a>
+      <a id="PredictJob:PredictJob"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PredictJob.html"><span class="name">PredictJob</span></a><span class="params">()</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@PredictJobextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">PredictJob</p>
+    </li><li name="com.datarobot.Recommender" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RecommenderextendsProductwithSerializable"></a>
+      <a id="Recommender:Recommender"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Recommender.html"><span class="name">Recommender</span></a><span class="params">(<span name="recommenderItemId">recommenderItemId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="isRecommender">isRecommender: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Boolean">Boolean</span>]</span>, <span name="recommenderUserId">recommenderUserId: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@RecommenderextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The recommender object will describe additional options specified if the project is used for a recommender problem.</p><div class="fullcomment"><div class="comment cmt"><p>The recommender object will describe additional options specified if the project is used for a recommender problem. It will be of the following form:</p></div><dl class="paramcmts block"><dt class="param">recommenderItemId</dt><dd class="cmt"><p>if a recommender problem, the name of the column containing item ids, otherwise null</p></dd><dt class="param">isRecommender</dt><dd class="cmt"><p>indicates whether the project is a recommender problem</p></dd><dt class="param">recommenderUserId</dt><dd class="cmt"><p>if a recommender problem, the name of the column containing
+user ids, otherwise null</p></dd></dl></div>
+    </li><li name="com.datarobot.RocCurve" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RocCurveextendsProductwithSerializable"></a>
+      <a id="RocCurve:RocCurve"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="RocCurve.html"><span class="name">RocCurve</span></a><span class="params">(<span name="source">source: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="rocPoints">rocPoints: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Double">Double</span>]]</span>, <span name="negativeClassPredictions">negativeClassPredictions: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="positiveClassPrediction">positiveClassPrediction: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Double">Double</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@RocCurveextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Status" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StatusextendsAnyRef"></a>
+      <a id="Status:Status"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Status.html"><span class="name">Status</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@StatusextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Test" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TestextendsAnyRef"></a>
+      <a id="Test:Test"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Test.html"><span class="name">Test</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@TestextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.WordCloud" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="WordCloudextendsProductwithSerializable"></a>
+      <a id="WordCloud:WordCloud"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="WordCloud.html"><span class="name">WordCloud</span></a><span class="params">(<span name="ngrams">ngrams: <span class="extype" name="scala.List">List</span>[<a href="NGram.html" class="extype" name="com.datarobot.NGram">NGram</a>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@WordCloudextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Project" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ProjectextendsAnyRef"></a>
+      <a id="Project:Project"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Project.html"><span class="name deprecated" title="Deprecated: (Since version 1.0) Support for the experimental Recommender Problems projects has been removed">Project</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@ProjectextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 1.0)</i> Support for the experimental Recommender Problems projects has been removed</p></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="com.datarobot.Blueprint" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Blueprint"></a>
+      <a id="Blueprint:Blueprint"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Blueprint$.html"><span class="name">Blueprint</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@Blueprint" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.DataRobotClient" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DataRobotClient"></a>
+      <a id="DataRobotClient:DataRobotClient"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DataRobotClient$.html"><span class="name">DataRobotClient</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@DataRobotClient" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Feature" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Feature"></a>
+      <a id="Feature:Feature"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Feature$.html"><span class="name">Feature</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@Feature" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Featurelist" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Featurelist"></a>
+      <a id="Featurelist:Featurelist"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Featurelist$.html"><span class="name">Featurelist</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@Featurelist" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Implicits" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Implicits"></a>
+      <a id="Implicits:Implicits"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Implicits$.html"><span class="name">Implicits</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@Implicits" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Model" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Model"></a>
+      <a id="Model:Model"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Model$.html"><span class="name">Model</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@Model" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Project" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Project"></a>
+      <a id="Project:Project"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Project$.html"><span class="name">Project</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@Project" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Factory for <a href="Project.html" class="extype" name="com.datarobot.Project">com.datarobot.Project</a> instances.</p>
+    </li><li name="com.datarobot.Status" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Status"></a>
+      <a id="Status:Status"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Status$.html"><span class="name">Status</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@Status" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Test" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Test"></a>
+      <a id="Test:Test"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Test$.html"><span class="name">Test</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@Test" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.Utilities" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Utilities"></a>
+      <a id="Utilities:Utilities"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Utilities$.html"><span class="name">Utilities</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@Utilities" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li><li name="com.datarobot.enums" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="enums"></a>
+      <a id="enums:enums"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="enums/package.html"><span class="name">enums</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#com.datarobot.package@enums" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" alt="Permalink" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>
