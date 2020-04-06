@@ -2,10 +2,16 @@ package com.datarobot
 
 import breeze.linalg.Counter2
 
+
+/** 
+ * @param source
+ * @param rocPoints
+ * @param negativeClassPredictions
+ * @param positiveClassPrediction
+ */
 case class RocCurve(source: String, rocPoints: List[Map[String, Double]], negativeClassPredictions: List[Double], positiveClassPrediction: List[Double]) {
     override def toString = s"RocCurve(${source})"
-
-
+    
     val rocPointsCounter2: Counter2[Int, String, Double] = Counter2()
     rocPoints.zipWithIndex.foreach { case (rocPoint, idx) => 
         rocPointsCounter2.update(idx, "liftNegative", rocPoint("liftNegative"))

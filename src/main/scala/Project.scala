@@ -40,8 +40,8 @@ import breeze.linalg.Counter2
   * @param targetType either Regression, Binary, or Multiclass
   */
 @deprecated(
-  "Support for the experimental Recommender Problems projects has been removed",
-  "1.0"
+  "Support for the experimental Recommender Problems projects is not available",
+  "0.1.0"
 )
 class Project(
     val id: String,
@@ -600,7 +600,7 @@ class Project(
     this
   }
 
-  def start_autopilot(
+  def startAutopilot(
       projectId: String,
       featurelistId: Option[String] = None
   ) = ???
@@ -627,17 +627,19 @@ class Project(
 
 }
 
-/** Factory for [[com.datarobot.Project]] instances. */
+/** Factory for [[com.datarobot.Project]] instances.
+  */
 object Project {
 
   import com.datarobot.Implicits.jsonDefaultFormats
 
-  // implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
-
-  // implicit val formats = Serialization.formats(NoTypeHints) + new PartitionSerializer
-
   val path = "projects/"
 
+  /** Create a project from local file
+    * @param file
+    * @param projectName
+    * @param maxWait
+    */
   def createFromFile(
       file: String,
       projectName: Option[String] = None,
@@ -675,6 +677,11 @@ object Project {
 
   // not great.  when toLocalIterator is run, data must fit into mani memory on head node to be feed local iterator
   // not necessarily and issue with beefy databricks, but less than idea when sharing resourcs.
+  /** Create a project from Spark DataFrame
+    *  @param df
+    *  @param projectName
+    *  @param maxWait
+    */
   def createFromSparkDf(
       df: org.apache.spark.sql.DataFrame,
       projectName: Option[String] = None,
@@ -714,6 +721,9 @@ object Project {
     Project.get(loc(0).replace(s"${client.endpoint}${this.path}", ""))
   }
 
+  /** Create project from HDFS
+    *  @todo implement this
+    */
   def createFromHDFS(
       url: String,
       port: String = null.asInstanceOf[String],
@@ -721,6 +731,9 @@ object Project {
       maxWait: Int = 600000
   ) = throw new NotImplementedError("Nope")
 
+  /** Create project from HDFS
+    *  @todo implement this
+    */
   def createFromDataSource(
       dataSource: String,
       userName: String,
@@ -729,6 +742,10 @@ object Project {
       maxWait: Int = 600000
   ) = throw new NotImplementedError("Nope")
 
+  /** Create project from URL (e.g. csv in S3 bucket)
+    *  @param url
+    *  @param projectName
+    */
   def createFromURL(
       url: String,
       projectName: Option[String] = None
@@ -738,13 +755,15 @@ object Project {
     client.postData(s"${path}", data = json).asString
   }
 
+  /** Delete a given project
+    */
   def delete(projectId: String)(implicit client: DataRobotClient) = {
     client.delete(s"$path$projectId").asString
   }
 
-  // def fromAsync(url: String)(implicit client: DataRobotClient) = throw new NotImplementedError("Nope")
-
-  // getters
+  /** Get a project
+    *  @param projectId
+    */
   def get(projectId: String)(implicit client: DataRobotClient) = {
     val r = client.get(s"${path}${projectId}/").asString
     if (r.code == 410) {
@@ -755,6 +774,8 @@ object Project {
     result.extract[Project]
   }
 
+  /** Get all projects
+    */
   def getProjects()(implicit client: DataRobotClient) = {
     val r = client.get(s"$path").asString
     val result = parse(r.body)
@@ -762,6 +783,8 @@ object Project {
     ps.map(p => p.extract[Project])
   }
 
+  /** Start modeling with autopilot
+    */
   def start(
       sourceData: String,
       target: String,

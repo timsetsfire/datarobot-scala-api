@@ -56,7 +56,8 @@ object Utilities {
   }
 
   case class DataFrameAsInputStream(df: org.apache.spark.sql.DataFrame) extends java.io.InputStream { 
-    val bytesDf = df.rdd.flatMap{ _.mkString("\"","\",\"","\"\n").getBytes("UTF-8")}
+    // val bytesDf = df.rdd.flatMap{ _.mkString("\"","\",\"","\"\n").getBytes("UTF-8")}
+    val bytesDf = df.rdd.mapPartitions{ rows => rows.map{ _.mkString("\"","\",\"","\"\n").getBytes("UTF-8")} }.flatMap{ r => r}
     bytesDf.persist
     val numBytesDf = bytesDf.count
     val bytesColumns = df.columns.mkString("",",","\n").getBytes("UTF-8")
