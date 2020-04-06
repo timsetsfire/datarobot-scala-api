@@ -9,7 +9,7 @@ import org.apache.spark.sql.DataFrame
 import com.datarobot.enums.EnumFormats.enumFormats
 object Utilities {
 
-  implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
+  import com.datarobot.Implicits.jsonDefaultFormats
 
   def _getDataReady(data: Seq[(String, Any)]) = {
     write(data.toMap)

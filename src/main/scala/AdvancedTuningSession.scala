@@ -12,11 +12,17 @@ import com.datarobot.Utilities._
 import java.io.Serializable
 import scala.collection.mutable.{Map => MMap}
 
+
+/** 
+  * @constructor start an advanced tuning session
+  * @param model model to be tuned
+  * @param description description of the tuning session
+  */ 
 case class AdvancedTuningSession(model: Model, description: Option[String] = None)(implicit client: DataRobotClient) {
 
+    import com.datarobot.Implicits.jsonDefaultFormats
+    
     type TaskName = String
-
-    implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
 
     private val currentHyperparameters = model.getHyperParameters
 
@@ -51,16 +57,3 @@ case class AdvancedTuningSession(model: Model, description: Option[String] = Non
     }
     
 }
-
-
-// # Get available task names,
-// # and available parameter names for a task name that exists on this model
-// tune.get_task_names()
-// tune.get_parameter_names('Eureqa Generalized Additive Model Classifier (3000 Generations)')
-
-// tune.set_parameter(
-//     task_name='Eureqa Generalized Additive Model Classifier (3000 Generations)',
-//     parameter_name='EUREQA_building_block__sine',
-//     value=1)
-
-// job = tune.run()

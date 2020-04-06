@@ -18,27 +18,31 @@ import com.datarobot.Implicits._
 
 import breeze.linalg.Counter2
 
-/** Project
-  * @constructor
-    @param id – the ID of a project
-    @param projectName – the name of a project
-    @param fileName – the name of the dataset used to create the project
-    @param stage – the stage of the project - if modeling, then the target is successfully set, and modeling or predictions can proceed.
-    @param autopilotMode (int) – the current autopilot mode, either 0 for full autopilot or 2 for manual mode
-    @param created – the time of project creation
-    @param target – the target of the project
-    @param metric – the metric used to select the best-performing models
-    @param partition – a json object described below
-    @param recommender – a json object described below
-    @param advancedOptions – a json object described below
-    @param positiveClass – if the project uses binary classification, the class designated to be the positive class. Otherwise, null.
-    @param maxTrainPct – the maximum percentage of the dataset that can be used to successfully train a model without going into the validation data
-    @param maxTrainRows – the maximum number of rows of the dataset that can be used to suc- cessfully train a model without going into the validation data
-    @param scaleoutMaxTrainPct – the maximum percentage of the dataset that can be used to successfully train a scaleout model without going into the validation data. May exceed maxTrainPct, in which case only scaleout models can be trained up to this point.
-    @param scaleoutMaxTrainRows – the maximum number of rows of the dataset that can used be used to successfully train a scaleout model without going into the validation data. May exceed maxTrainRows, in which case only scaleout models can be trained up to this point.
-    @param holdoutUnlocked – whether the holdout has been unlocked targetType–eitherRegression,Binary(forbinaryclassification)orMulticlass,depend-
-    ing on the selected target
+/**
+  * @constructor create a new project.
+  * @param id project id
+  * @param projectName project name
+  * @param fileName the name of the dataset used to create the project
+  * @param stage
+  * @param autopilotMode 0 if autopiloe, 2 is manual
+  * @param created project creation time
+  * @param target project target
+  * @param metric the metric used to select the best-performing models
+  * @param partition partition of given project.  See [[com.datarobot.Partition]].
+  * @param recommender does nothing
+  * @param advancedOptions advanced options of the project.  See [[com.datarobot.AdvancedOptions]].
+  * @param positiveClass for binary classification projects, the class designated to be the positive class. Otherwise, null.
+  * @param maxTrainPct the maximum percentage of the dataset that can be used to successfully train a model without going into the validation data
+  * @param maxTrainRows the maximum number of rows of the dataset that can be used to suc- cessfully train a model without going into the validation data
+  * @param scaleoutMaxTrainPct the maximum percentage of the dataset that can be used to successfully train a scaleout model without going into the validation data. May exceed maxTrainPct, in which case only scaleout models can be trained up to this point.
+  * @param scaleoutMaxTrainRows the maximum number of rows of the dataset that can used be used to successfully train a scaleout model without going into the validation data. May exceed maxTrainRows, in which case only scaleout models can be trained up to this point.
+  * @param holdoutUnlocked true if holdout has been unlocked
+  * @param targetType either Regression, Binary, or Multiclass
   */
+@deprecated(
+  "Support for the experimental Recommender Problems projects has been removed",
+  "1.0"
+)
 class Project(
     val id: String,
     var projectName: String,
@@ -61,106 +65,193 @@ class Project(
 ) {
   //
   import Project._
+  import com.datarobot.Implicits.jsonDefaultFormats
 
   override def toString = s"Project(${projectName.get})"
 
   /** project */
-  implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
+  // implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
 
-  def blend()(implicit client: DataRobotClient) =
-    throw new NotImplementedError("Nope")
-
-  def clone(newProjectName: String, maxWait: Int = 60000)(implicit client: DataRobotClient) = {
-    val data = _getDataReady( Seq("projectId" -> this.id, "projectName" -> newProjectName))
-    val r = client.postData("projectClones/", data ).asString
+  /** @return Returns a copy (post-EDA1) copy of the project.
+    *  @param newProjectName Name of returns project
+    *  @param maxWait Max wait time
+    *  @todo add maxWait appropriate to request happening behind the scenes.
+    */
+  def clone(newProjectName: String, maxWait: Int = 60000)(
+      implicit client: DataRobotClient
+  ) = {
+    val data = _getDataReady(
+      Seq("projectId" -> this.id, "projectName" -> newProjectName)
+    )
+    val r = client.postData("projectClones/", data).asString
     val loc = Waiter.waitForAsyncResolution(r.headers("location")(0), maxWait)
     val project = Project.get(loc(0).replace(s"${client.endpoint}${path}", ""))
     project
   }
-  
-  def createBlender(models: List[Model], blenderMethod: BlenderMethod.Value)(implicit client: DataRobotClient) = {
-      val params = Seq("modelIds" -> models.map{ _.id}, "blenderMethod" -> blenderMethod)
-      val data = _getDataReady(params)
-      val r = client.postData(s"projects/${id}/blenderModels/", data).asString
-      val loc = r.code match { 
-        case 202 => r.headers("location")(0).replace(client.endpoint, "")
-        case _ => throw new Exception(s"${r.code}: ${r.body}")
-      }
-      val job = client.get(loc).asString 
-      job.code match { 
-        case 200 => parse(job.body).extract[ModelJob]
-        case _ => throw new Exception(s"${r.code}: ${r.body}")
-      }
-    }
 
+  /** @return Returns [[com.datarobot.ModelJob]] for the requested blender
+    *  @param models list of [[com.datarobot.Model]] to use for blending
+    *  @param blenderMethod one of [[com.datarobot.enums.BlenderMethod]]
+    */
+  def createBlender(models: List[Model], blenderMethod: BlenderMethod.Value)(
+      implicit client: DataRobotClient
+  ) = {
+    val params =
+      Seq("modelIds" -> models.map { _.id }, "blenderMethod" -> blenderMethod)
+    val data = _getDataReady(params)
+    val r = client.postData(s"projects/${id}/blenderModels/", data).asString
+    val loc = r.code match {
+      case 202 => r.headers("location")(0).replace(client.endpoint, "")
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    val job = client.get(loc).asString
+    job.code match {
+      case 200 => parse(job.body).extract[ModelJob]
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+  }
+
+  /**
+    * @todo implement this
+    */
   def createModelingFeaturelist() =
     throw new NotImplementedError("This is not a Timeseries project")
-  def createTypeTransformFeature() =
-    throw new NotImplementedError("Not yet implemented")
 
+  /**
+    * @return Returns Unit.  Deletes projects
+    */
   def delete()(implicit client: DataRobotClient) = Project.delete(this.id)
 
-  // /** */
-  def getBlenderEligibility(models: List[Model], blenderMethod: BlenderMethod.Value)(implicit client: DataRobotClient) = {
-    val params = Seq("modelIds" -> models.map{ _.id}, "blenderMethod" -> blenderMethod)
+  /**
+    * @param models List of models to blend together
+    * @param blenderMethod
+    */
+  def getBlenderEligibility(
+      models: List[Model],
+      blenderMethod: BlenderMethod.Value
+  )(implicit client: DataRobotClient) = {
+    val params =
+      Seq("modelIds" -> models.map { _.id }, "blenderMethod" -> blenderMethod)
     val data = _getDataReady(params)
-    val r = client.postData(s"projects/${id}/blenderModels/blendCheck/", data).asString
+    val r = client
+      .postData(s"projects/${id}/blenderModels/blendCheck/", data)
+      .asString
     parse(r.body).extract[Map[String, Any]]
   }
-  /** blueprint */
+
+  /**
+    * @return returns a list of eligible blueprints
+    * @see [[com.datarobot.Blueprint.getBlueprints]]
+    */
   def getBlueprints()(implicit client: DataRobotClient) =
     Blueprint.getBlueprints(this.id)
+
+  /**
+    * @param id blueprint id
+    * @return blueprint
+    * @see [[com.datarobot.Blueprint.get]]
+    */
   def getBlueprint(id: String)(implicit client: DataRobotClient) =
     Blueprint.get(this.id, id)
+
+  /**
+    * @param blueprintId blueprint d
+    * @todo implement this
+    */
   def getBlueprintChart(blueprintId: String)(implicit client: DataRobotClient) =
     throw new NotImplementedError(
       "Nope"
     ) //Blueprint.getBlueprintChart(this.id, blueprintId)
+
+  /**
+    * @param blueprintId blueprint d
+    * @todo implement this
+    */
   def getReducedBlueprintChart(
       blueprintId: String
   )(implicit client: DataRobotClient) =
     throw new NotImplementedError(
       "Nope"
     ) //Blueprint.getReducedBlueprintChart(this.id, blueprintId)
+
+  /**
+    * @param blueprintId blueprint d
+    * @todo implement this
+    */
   def getBlueprintDocumentation(
       blueprintId: String
   )(implicit client: DataRobotClient) =
     throw new NotImplementedError(
       "Nope"
-    ) // Blueprint.getBlueprintDocumentation(this.id, blueprintId)
-  /** */
-  /** models */
+    )
+
+  /**
+    * @return list of models for the project
+    */
   def getModels()(implicit client: DataRobotClient) =
     Model.getModels(this.id)
+
+  /**
+    * @param modelId model id to get
+    * @return model for specified `modelId`
+    */
   def getModel(modelId: String)(implicit client: DataRobotClient) =
     Model.getModel(this.id, modelId)
+
+  /**
+    * @return list of frozen models for project
+    */
   def getFrozenModels()(implicit client: DataRobotClient) =
     Model.getFrozenModels(this.id)
 
-  /** */
-  /** features */
+  /**
+    * @param modelId model id to get
+    * @return frozen model for specified id
+    * @todo implement this
+    */
+  def getFrozenModel(modelId: String)(implicit client: DataRobotClient) = ???
+
+  /**
+    * @return return [[com.datarobot.Feature]] given specified featurename
+    */
   def getFeature(featureName: String)(implicit client: DataRobotClient) =
     Feature.get(this.id, featureName)
+
+  /**
+    * @return set of all features available in project
+    */
   def getFeatures()(implicit client: DataRobotClient) =
     Feature.getFeatures(this.id)
+
+  /**
+    * @return set of metrics available if given `featureName` is set as target
+    */
   def getMetrics(featureName: String)(implicit client: DataRobotClient) =
     Feature.getMetrics(this.id, featureName)
 
-  /** featurelists */
+  /** Create feature list within a project.  see also [[com.datarobot.Featurelist.createFeaturelist]]
+    *  @return new feature list object [[com.datarobot.Featurelist]]
+    *  @param name Name for new featurelist
+    *  @param features List of feature names to include in list
+    */
   def createFeaturelist(name: String, features: List[String])(
       implicit client: DataRobotClient
   ) = Featurelist.createFeaturelist(this.id, name, features)
   def deleteFeaturelist(featurelistId: String)(
       implicit cleint: DataRobotClient
   ) = Featurelist.delete(this.id, featurelistId)
+
+  /**
+    * @return all featurelists available in project
+    */
   def getFeaturelists()(implicit client: DataRobotClient) =
     Featurelist.getFeaturelists(this.id)
 
-  /** */
-  // for each project
-
-  def getAccessList(projectId: String)(implicit client: DataRobotClient) = {
-    val r = client.get(s"${path}${projectId}/accessControl/").asString
+  /**
+    * @return list of users and permissions for given project
+    */
+  def getAccessList()(implicit client: DataRobotClient) = {
+    val r = client.get(s"${path}${this.id}/accessControl/").asString
     val userList = parse(r.body).extract[Map[String, Any]].get("data")
     userList match {
       case Some(v) => v.asInstanceOf[List[Map[String, String]]]
@@ -168,11 +259,17 @@ class Project(
     }
   }
 
+  /**
+    * @todo implement this
+    */
   def getAllJobs()(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
 
   // association matrix helpers
 
+  /**
+    * @return Returns associtation matric details for `feature1` and `feature2`.
+    */
   def getFeatureAssociationMatrixDetails(
       feature1: String,
       feature2: String,
@@ -199,6 +296,12 @@ class Project(
     }
   }
 
+  /**
+    * @param metric association matrix metric
+    * @param atype association matric value type
+    * @param featurelistId
+    * @return returns feature association matric for a given featurelist
+    */
   def getFeatureAssocationMatrix(
       metric: FeatureAssociationMetric.Value =
         FeatureAssociationMetric.MUTUALINFO,
@@ -234,13 +337,16 @@ class Project(
 
   def getAssociationFeatureLists()(implicit client: DataRobotClient) = {
     val url = s"${path}${this.id}/featureAssociationMatrix/list/"
-    val r = client.get(url).asString 
-    r.code match { 
-      case 200 => parse(r.body).extract[Seq[Map[String,String]]]
-      case _ => throw new Exception(s"${r.code}: ${r.body}")
+    val r = client.get(url).asString
+    r.code match {
+      case 200 => parse(r.body).extract[Seq[Map[String, String]]]
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
     }
   }
 
+  /** Caluclated assocation matrix for specific featurelist
+    * @param featurelistId
+    */
   def requestFeatureAssocationMatrix(
       featurelistId: String
   )(implicit client: DataRobotClient) = {
@@ -255,14 +361,27 @@ class Project(
     }
   }
 
+  /**
+    * @todo implement this
+    */
   def getBlenders()(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
+
+  /**
+    * @todo implement this
+    */
   def getDatasets()(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
+
+  /**
+    * @todo implement this
+    */
   def getDatetimeModels()(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
 
-  
+  /**
+    * @todo implement this
+    */
   def getLeaderboardLink()(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
 
@@ -291,31 +410,65 @@ class Project(
     }
   }
 
-  // this won't be implemented in non TS project
+  /**
+    * @todo implement this
+    */
   def getModelingFeaturelists(projectId: String)(
       implicit client: DataRobotClient
   ) = throw new NotImplementedError("This is not a Timeseries project")
-  // this won't be implemented in non TS project
+
+  /**
+    * @todo implement this
+    */
   def getModelingFeatures(projectId: String)(implicit client: DataRobotClient) =
     throw new NotImplementedError("This is not a Timeseries project")
 
+  /**
+    * @todo implement this
+    */
   def getPredictJobs(projectId: String)(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
+
+  /**
+    * @todo implement this
+    */
   def getPrimeFiles(projectId: String)(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
+
+  /**
+    * @todo implement this
+    */
   def getPrimeModels(projectId: String)(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
 
+  /**
+    * @return REturns a list of models recommended by DataRobot
+    */
   def getRecommendedModels()(implicit client: DataRobotClient) =
     Model.getRecommendedModels(this.id)
+
+  /**
+    * @return Returns model recommended for deployment
+    */
   def getRecommendedModel()(implicit client: DataRobotClient) =
     Model.getRecommendedModel(this.id)
 
+  /**
+    * @todo implement this
+    */
   def getRatingTableModels(projectId: String)(
       implicit client: DataRobotClient
   ) = throw new NotImplementedError("Nope")
+
+  /**
+    * @todo implement this
+    */
   def getRatingTables(projectId: String)(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
+
+  /**
+    * @todo implement this
+    */
   def getStatus(projectId: String)(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
 
@@ -330,6 +483,8 @@ class Project(
     this
   }
 
+  /** Start modeling
+    */
   def setTarget(
       target: String,
       mode: ModelingMode.Value = ModelingMode.AUTOPILOT,
@@ -382,6 +537,9 @@ class Project(
     //self.refresh()
   }
 
+  /**
+    * @param workerCount Number of workers to use for modeling
+    */
   def setWorkerCount(workerCount: Int)(implicit client: DataRobotClient) = {
     val data = _getDataReady(Seq(("workerCount", workerCount)))
     val response = client.patch(s"projects/${id}/", data).asString
@@ -391,36 +549,36 @@ class Project(
   }
 
   def train(
-    blueprint: Blueprint,
-    featurelistId: Option[String] = None,
-    samplePct: Option[Float] = None, 
-    trainingRowCount: Option[Int] = None,
-    sourceProjectId: Option[String] = None, 
-    scoringType: Option[String] = None, 
-    monotonicIncreasingFeaturelistId: Option[String] = None, 
-    monotonicDecreasingFeaturelistId: Option[String] = None
-    )(implicit client: DataRobotClient) = { 
+      blueprint: Blueprint,
+      featurelistId: Option[String] = None,
+      samplePct: Option[Float] = None,
+      trainingRowCount: Option[Int] = None,
+      sourceProjectId: Option[String] = None,
+      scoringType: Option[String] = None,
+      monotonicIncreasingFeaturelistId: Option[String] = None,
+      monotonicDecreasingFeaturelistId: Option[String] = None
+  )(implicit client: DataRobotClient) = {
 
     val params = Seq(
       "blueprintId" -> blueprint.id,
       "featurelistId" -> featurelistId,
-      "samplePct" -> samplePct, 
-      "trainingRowCount" -> trainingRowCount, 
-      "sourceProjectId" -> sourceProjectId, 
-      "scoringType" -> scoringType, 
-      "monotonicIncreasingFeaturelistId" -> monotonicIncreasingFeaturelistId, 
+      "samplePct" -> samplePct,
+      "trainingRowCount" -> trainingRowCount,
+      "sourceProjectId" -> sourceProjectId,
+      "scoringType" -> scoringType,
+      "monotonicIncreasingFeaturelistId" -> monotonicIncreasingFeaturelistId,
       "monotonicDecreasingFeaturelistId" -> monotonicDecreasingFeaturelistId
     )
     val data = _getDataReady(params)
     val r = client.postData(s"${path}${this.id}/models/", data).asString
-    val loc = r.code match { 
+    val loc = r.code match {
       case 202 => r.headers("location")(0).replace(client.endpoint, "")
-      case _ => throw new Exception(s"${r.code}: ${r.body}")
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
     }
-    val job = client.get(loc).asString 
-    job.code match { 
+    val job = client.get(loc).asString
+    job.code match {
       case 200 => parse(job.body).extract[ModelJob]
-      case _ => throw new Exception(s"${r.code}: ${r.body}")
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
     }
   }
 
@@ -469,9 +627,12 @@ class Project(
 
 }
 
+/** Factory for [[com.datarobot.Project]] instances. */
 object Project {
 
-  implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
+  import com.datarobot.Implicits.jsonDefaultFormats
+
+  // implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
 
   // implicit val formats = Serialization.formats(NoTypeHints) + new PartitionSerializer
 
@@ -479,10 +640,13 @@ object Project {
 
   def createFromFile(
       file: String,
-      projectName: String = null.asInstanceOf[String],
+      projectName: Option[String] = None,
       maxWait: Int = 600000
   )(implicit client: DataRobotClient) = {
-    val pName = if (projectName == null) file else projectName
+    val pName: String = projectName match {
+      case Some(s) => s
+      case _       => file
+    }
     val fs: java.io.InputStream = new java.io.FileInputStream(file)
     val bytesInStream = fs.available
     val dataMP = MultiPart(
@@ -513,11 +677,14 @@ object Project {
   // not necessarily and issue with beefy databricks, but less than idea when sharing resourcs.
   def createFromSparkDf(
       df: org.apache.spark.sql.DataFrame,
-      projectName: String = null.asInstanceOf[String],
+      projectName: Option[String] = None,
       maxWait: Int = 600000
   )(implicit client: DataRobotClient) = {
     val fs = DataFrameAsInputStream(df)
-    val pName = if (projectName == null) "Spark DataFrame" else projectName
+    val pName: String = projectName match {
+      case Some(s) => s
+      case _       => "Spark DataFrame"
+    }
     val bytesInStream = fs.numBytes // 6309760
     val dataMP = MultiPart(
       name = "file",
@@ -550,7 +717,7 @@ object Project {
   def createFromHDFS(
       url: String,
       port: String = null.asInstanceOf[String],
-      projectName: String = null.asInstanceOf[String],
+      projectName: Option[String] = None,
       maxWait: Int = 600000
   ) = throw new NotImplementedError("Nope")
 
@@ -558,13 +725,13 @@ object Project {
       dataSource: String,
       userName: String,
       password: String,
-      projectName: String = null.asInstanceOf[String],
+      projectName: Option[String] = None,
       maxWait: Int = 600000
   ) = throw new NotImplementedError("Nope")
 
   def createFromURL(
       url: String,
-      projectName: String = null.asInstanceOf[String]
+      projectName: Option[String] = None
   )(implicit client: DataRobotClient) = {
     val pName = if (projectName == null) url else projectName
     val json = write(Map("url" -> url, "projectName" -> pName))
@@ -612,7 +779,10 @@ object Project {
     // create project from data
     val project = this.createFromFile(
       sourceData,
-      projectName.getOrElse(sourceData),
+      projectName match {
+        case Some(s) => projectName
+        case _       => sourceData
+      },
       maxWait
     )
     // set project target

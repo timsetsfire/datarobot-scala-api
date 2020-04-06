@@ -39,7 +39,7 @@ case class Featurelist(
 
 object Featurelist {
 
-  implicit val jsonDefaultFormats = DefaultFormats
+  import com.datarobot.Implicits.jsonDefaultFormats
 
   /** feature list related methods **/ 
   def createFeaturelist(projectId: String, name: String, features:List[String])(implicit client: DataRobotClient) = {

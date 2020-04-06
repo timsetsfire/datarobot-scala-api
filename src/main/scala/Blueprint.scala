@@ -45,7 +45,7 @@ case class Blueprint(
 
 object Blueprint { 
 
-  implicit val jsonDefaultFormats = DefaultFormats
+  import com.datarobot.Implicits.jsonDefaultFormats
 
   val path = "blueprints/"
 

@@ -63,7 +63,7 @@ import com.datarobot.enums.{VariableTypeTransform, DateExtractionUnits}
 
   object Feature { 
 
-    implicit val jsonDefaultFormats = DefaultFormats
+    import com.datarobot.Implicits.jsonDefaultFormats
 
     def getFeatures(projectId: String)(implicit client: DataRobotClient) = {
       val r = client.get(s"projects/${projectId}/features/").asString

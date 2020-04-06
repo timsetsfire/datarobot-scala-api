@@ -36,7 +36,7 @@ used to train the model
   * @param monotonicIncreasingFeaturelistId  – (new in v2.11) null or str, the ID of the featurelist that defines the set of features with a monotonically increasing relationship to the target. If null, no such constraints are enforced.
   * @param monotonicDecreasingFeaturelistId  – (new in v2.11) null or str, the ID of the featurelist that defines the set of features with a monotonically decreasing relationship to the target. If null, no such constraints are enforced.
   * @param supportsMonotonicConstraints  – (new in v2.11) boolean, whether this model supports enforcing montonic constraints
-  * @param id – theIDofthemodel
+  * @param id – Model ID
   * @param isStarred  (bool) – (New in version v2.13) whether the model has been starred
   * @param predictionThreshold  (float) – (New in version v2.13) threshold used for binary classification in predictions.
   * @param predictionThresholdReadOnly  (boolean) – (New in version v2.13) indicates whether modification of a predictions threshold is forbidden. Threshold modification is forbidden once a model has had a deployment created or predictions made via the dedicated prediction API.
@@ -65,7 +65,7 @@ class Model(
     var predictionThresholdReadOnly: Option[String]
 ) {
 
-  implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
+  import com.datarobot.Implicits.jsonDefaultFormats
   override def toString = s"Model(${modelType})"
 
 
@@ -223,10 +223,8 @@ class Model(
 
 object Model {
 
-  implicit val jsonDefaultFormats = DefaultFormats
-
+  import com.datarobot.Implicits.jsonDefaultFormats
   
-
   def getCapabilities(projectId: String, modelId: String)(implicit client: DataRobotClient) = {
     val r = client.get(s"projects/${projectId}/models/${modelId}/supportedCapabilities/").asString
     val json = r.code match { 
