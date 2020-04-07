@@ -51,7 +51,7 @@ class Model(
     val trainingEndDate: Option[String],
     val modelCategory: String,
     val isFrozen: Boolean = false,
-    val metrics: Map[String, Any],
+    val metrics: Map[String, Map[String, Option[Double]]],
     val modelType: String,
     val blueprintId: String,
     val monotonicIncreasingFeaturelistId: Option[String] = None,
@@ -170,12 +170,11 @@ class Model(
   }
 
   def getResiduals()(implicit client: DataRobotClient) = {
-    // needs work
     val r =
       client.get(s"projects/${projectId}/models/${id}/residuals/").asString
     r.code match {
       case 404 => throw new Exception(s"${r.code}: ${r.body}")
-      case _   => parse(r.body).extract[List[Map[String, Any]]].zipWithIndex
+      case _   => parse(r.body).extract[Map[String, Map[String, ResidualData]]]
     }
   }
 
@@ -254,6 +253,26 @@ class Model(
       case _   => throw new Exception(s"${r.code}: ${r.body}")
     }
   }
+
+  def getCrossValidationScores()(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${this.projectId}/models/${this.id}/crossValidationScores/").asString
+    parse(r.body).extract[Map[String, Map[String, Map[String, Double]]]]
+  }
+
+  def runCrossValidation()(implicit client: DataRobotClient) = { 
+    val r = client.post(s"projects/${this.projectId}/models/${this.id}/crossValidation/").asString
+    val loc = r.code match {
+      case 202 => r.headers("location")(0).replace(client.endpoint, "")
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    val job = client.get(loc).asString
+    job.code match {
+      case 200 => parse(job.body).extract[ModelJob]
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+  }
+
+  // need to do all confusion chart stuff as well
 
   /**
     * @todo
@@ -378,7 +397,7 @@ class FrozenModel(
     trainingEndDate: Option[String],
     modelCategory: String,
     isFrozen: Boolean = true,
-    metrics: Map[String, Any],
+    metrics: Map[String, Map[String, Option[Double]]],
     modelType: String,
     blueprintId: String,
     monotonicIncreasingFeaturelistId: Option[String] = None,

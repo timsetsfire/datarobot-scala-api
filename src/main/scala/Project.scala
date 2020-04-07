@@ -39,10 +39,6 @@ import breeze.linalg.Counter2
   * @param holdoutUnlocked true if holdout has been unlocked
   * @param targetType either Regression, Binary, or Multiclass
   */
-@deprecated(
-  "Support for the experimental Recommender Problems projects is not available",
-  "0.1.0"
-)
 class Project(
     val id: String,
     var projectName: String,
@@ -385,30 +381,33 @@ class Project(
   def getLeaderboardLink()(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
 
-  def getModelJob(jobId: String)(implicit client: DataRobotClient) = {
-    val r = client.get(s"${path}${id}/modelJobs/${jobId}/").asString
-    val json = parse(r.body)
-    json.extract[ModelJob]
-  }
+  def getModelJob(jobId: String)(implicit client: DataRobotClient) = ModelJob.get(this.id, jobId)
 
-  def getModelJobs(
-      status: Option[String] = None
-  )(implicit client: DataRobotClient) = {
-    if (List("queue", "inprogress", "error").contains(status)) {
-      val r = status match {
-        case None => client.get(s"${path}${id}/modelJobs/").asString
-        case Some(status) =>
-          client
-            .get(s"${path}${id}/modelJobs/")
-            .params("status" -> status)
-            .asString
-      }
-      val JArray(json) = parse(r.body)
-      json.map { j => j.extract[ModelJob] }
-    } else {
-      throw new Exception(s"don't understand status ${status} request")
-    }
-  }
+  // def getModelJob(jobId: String)(implicit client: DataRobotClient) = {
+  //   val r = client.get(s"${path}${id}/modelJobs/${jobId}/").asString
+  //   val json = parse(r.body)
+  //   json.extract[ModelJob]
+  // }
+
+  def getModelJobs(status: Option[String] = None)(implicit client: DataRobotClient) = ModelJob.getModelJobs(this.id, status)
+  // def getModelJobs(
+  //     status: Option[String] = None
+  // )(implicit client: DataRobotClient) = {
+  //   if (List("queue", "inprogress", "error").contains(status.get)) {
+  //     val r = status match {
+  //       case None => client.get(s"${path}${id}/modelJobs/").asString
+  //       case Some(status) =>
+  //         client
+  //           .get(s"${path}${id}/modelJobs/")
+  //           .params("status" -> status)
+  //           .asString
+  //     }
+  //     val JArray(json) = parse(r.body)
+  //     json.map { j => j.extract[ModelJob] }
+  //   } else {
+  //     throw new Exception(s"don't understand status ${status} request")
+  //   }
+  // }
 
   /**
     * @todo implement this
@@ -587,7 +586,7 @@ class Project(
       case true => Unit
       case false => {
         val data = _getDataReady(Seq(("holdoutUnlocked", true)))
-        val r = client.update(s"${path}${id}/", data).asString
+        val r = client.patch(s"${path}${id}/", data).asString
         r.code match {
           case 200 => this.holdoutUnlocked = true
           case _ =>

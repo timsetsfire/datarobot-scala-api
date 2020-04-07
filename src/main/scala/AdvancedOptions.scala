@@ -1,5 +1,9 @@
 package com.datarobot
 
+// import com.datarobot.Implicits.jsonDefaultFormats
+import com.datarobot.Implicits.jsonDefaultFormats
+import org.json4s.jackson.Serialization.{writePretty, write}
+
 
 /**
   * @constructor The advancedOptions object specifies more settings for a project
@@ -28,14 +32,14 @@ package com.datarobot
   */
 case class AdvancedOptions(
   blueprintThreshold: Option[Int] = None,
-  responseCap: Boolean = false,
+  responseCap: Option[Double] = None,
   seed: Option[Int]= None,//
   weights: Option[String]= None, //
   rateTopPctThreshold: Option[Float]=None, //
   offset: Option[String]= None,//
   exposure: Option[String]= None,//
   eventsCount: Option[String]= None,//
-  smartDownsampled: Boolean= false,//
+  smartDownsampled: Option[Boolean] = None,//
   majorityDownsamplingRate: Option[Double]= None,//
   downsampledMinorityRows: Option[Int]= None,
   downsampledMajorityRows: Option[Int]= None,
@@ -43,11 +47,13 @@ case class AdvancedOptions(
   scaleoutModelingMode: String = "disabled",//
   defaultMonotonicIncreasingFeaturelistId: Option[String]= None, // 
   defaultMonotonicDecreasingFeaturelistId: Option[String]= None, //
-  onlyIncludeMonotonicBlueprints: Boolean = false,  //
+  onlyIncludeMonotonicBlueprints: Option[Boolean] = None,  //
   blendBestModels: Boolean = true, //
-  minSecondaryValidationModelCount: Int = 0, //
+  minSecondaryValidationModelCount: Option[Int] = None, //
   scoringCodeOnly: Boolean = false, //
   prepareModelForDeployment: Boolean = true, //
   allowedPairwiseInteractionGroups: Option[Seq[Seq[String]]] = None //
-)
+) {
+  override def toString =  writePretty(this)
+}
   // featureSettings: Option[Seq[FeatureSetting]] = None

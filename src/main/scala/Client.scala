@@ -18,6 +18,13 @@ class DataRobotClient(token: String, val endpoint: String) {
     ).method("DELETE")
   }
 
+  def post(url: String, contentType: String = "application/json") = {
+    Http(s"${endpoint}${url}").headers(
+      auth,
+      ("Content-Type", contentType)
+    ).method("POST")
+  }
+
   def postForm(url: String, data: Seq[(String,String)], contentType: String = "application/json") = {
     Http(s"${endpoint}${url}").headers(
       auth,

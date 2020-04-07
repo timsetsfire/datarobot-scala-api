@@ -1,7 +1,9 @@
 package com.datarobot
 
 import com.datarobot.enums.{CVMethod, ValidationType}
-import org.json4s._
+import com.datarobot.Implicits.jsonDefaultFormats
+import org.json4s.jackson.Serialization.{writePretty, write}
+
 
 /** Partitioning for a given project
   * @constructor create a new Partition object
@@ -36,4 +38,6 @@ case class Partition(
   holdoutPct: Option[Double]= None,
   validationLevel: Option[String]= None,
   useTimeSeries: Option[Boolean]= None
-) 
+)   {
+  override def toString = writePretty(this)
+}

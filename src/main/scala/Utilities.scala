@@ -7,6 +7,8 @@ import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
 import org.apache.spark.sql.DataFrame
 import com.datarobot.enums.EnumFormats.enumFormats
+import scalaj.http.HttpOptions
+
 object Utilities {
 
   import com.datarobot.Implicits.jsonDefaultFormats
@@ -21,7 +23,7 @@ object Utilities {
       val baseTime = System.currentTimeMillis
       
       def asyncHelper(r: String, maxWait: Int )(implicit client: DataRobotClient): IndexedSeq[String] = {
-        val resp = client.get(r).asString
+        val resp = client.get(r).option(HttpOptions.connTimeout(650)).option(HttpOptions.readTimeout(maxWait)).asString
         if(System.currentTimeMillis - baseTime > maxWait) throw new Exception("timeout")
         else {
           if(resp.code == 303) {
