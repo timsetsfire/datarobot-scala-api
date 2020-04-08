@@ -1,4 +1,4 @@
-package com.datarobot.enums
+package com.github.timsetsfire.datarobot.enums
 import com.fasterxml.jackson.annotation.JsonProperty
 import scala.reflect.ClassTag
 import org.json4s._

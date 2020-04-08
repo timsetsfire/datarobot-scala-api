@@ -1,4 +1,4 @@
-package com.datarobot
+package com.github.timsetsfire.datarobot
 import scala.util.Try
 import org.json4s._
 import org.json4s.jackson.Serialization.write
@@ -45,7 +45,7 @@ case class Blueprint(
 
 object Blueprint { 
 
-  import com.datarobot.Implicits.jsonDefaultFormats
+  import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
 
   val path = "blueprints/"
 

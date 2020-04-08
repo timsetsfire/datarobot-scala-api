@@ -1,4 +1,4 @@
-package com.datarobot
+package com.github.timsetsfire.datarobot
 import scalaj.http._
 
 class DataRobotClient(token: String, val endpoint: String) {

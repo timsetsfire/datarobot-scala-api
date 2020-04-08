@@ -3,7 +3,7 @@
 // import org.apache.spark.SparkContext
 // import org.apache.log4j.Logger
 // import org.apache.log4j.Level
-// import com.datarobot._
+// import com.github.timsetsfire.datarobot._
 
 // Logger.getLogger("org").setLevel(Level.WARN)
 // Logger.getLogger("akka").setLevel(Level.WARN)
@@ -17,7 +17,7 @@
 
 // val c: scala.collection.immutable.Map[String,Any] = Map("coefficient" -> 0.07845659765035268, "originalFeature" -> "addr_state", "stageCoefficients" -> List(), "transformations" -> List(Map("name" -> "One-hot", "value" -> "AZ")), "derivedFeature" -> "addr_state-AZ", "type" -> "CAT")
 
-package com.datarobot
+package com.github.timsetsfire.datarobot
 
 import breeze.linalg.Counter
 

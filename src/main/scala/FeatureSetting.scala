@@ -1,4 +1,4 @@
-package com.datarobot
+package com.github.timsetsfire.datarobot
 
 /** FeatureSetting
   * @constructor 

@@ -1,4 +1,4 @@
-package com.datarobot
+package com.github.timsetsfire.datarobot
 
 case class ResidualHistogramInterval(intervalEnd: Double, intervalStart: Double, occurrences: Int)
 case class Residual(actual: Double,predicted: Double,residual: Double,rownumber: Double)

@@ -1,7 +1,7 @@
-package com.datarobot
+package com.github.timsetsfire.datarobot
 
-// import com.datarobot.Implicits.jsonDefaultFormats
-import com.datarobot.Implicits.jsonDefaultFormats
+// import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
+import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
 import org.json4s.jackson.Serialization.{writePretty, write}
 
 

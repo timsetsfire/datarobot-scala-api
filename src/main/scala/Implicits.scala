@@ -1,5 +1,5 @@
-package com.datarobot
-import com.datarobot.enums.EnumFormats.enumFormats
+package com.github.timsetsfire.datarobot
+import com.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
 import org.json4s.DefaultFormats
 
 object Implicits { 

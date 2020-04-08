@@ -1,4 +1,4 @@
-package com.datarobot
+package com.github.timsetsfire.datarobot
 
 import scala.util.Try
 import org.json4s._
@@ -6,11 +6,11 @@ import org.json4s.jackson.Serialization.write
 import org.json4s.jackson.JsonMethods._
 import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
-import com.datarobot.Utilities._getDataReady
-import com.datarobot.enums.EnumFormats.enumFormats
-import com.datarobot.enums._
-import com.datarobot.Utilities._
-import com.datarobot.Implicits._
+import com.github.timsetsfire.datarobot.Utilities._getDataReady
+import com.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
+import com.github.timsetsfire.datarobot.enums._
+import com.github.timsetsfire.datarobot.Utilities._
+import com.github.timsetsfire.datarobot.Implicits._
 
 import java.util.jar.{JarOutputStream, JarInputStream}
 import java.io.{ByteArrayOutputStream, ByteArrayInputStream}
@@ -63,7 +63,7 @@ class Model(
     var predictionThresholdReadOnly: Option[String]
 ) {
 
-  import com.datarobot.Implicits.jsonDefaultFormats
+  import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
   override def toString = s"Model(${modelType})"
 
   def advancedTuning(description: String)(implicit client: DataRobotClient) = {
@@ -323,7 +323,7 @@ class Model(
 
 object Model {
 
-  import com.datarobot.Implicits.jsonDefaultFormats
+  import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
 
   def get(projectId: String, modelId: String)(
       implicit client: DataRobotClient
