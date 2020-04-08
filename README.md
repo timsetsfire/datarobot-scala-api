@@ -3,26 +3,28 @@
 Scala API (very rough)
 
 ```
-import com.datarobot._
-import com.datarobot.Implicits._
+import com.github.timsetsfire.datarobot._
+import com.github.timsetsfire.datarobot.Implicits._
 val DATAROBOT_API_TOKEN = "your-key"
 val DATAROBOT_ENDPOINT = "https://app.datarobot.com/api/v2/"
 implicit val client = DataRobotClient(DATAROBOT_API_TOKEN, DATAROBOT_ENDPOINT)
 val file = "code/10K_Lending_Club_Loans.csv"
 val project = Project.createFromFile(file, "LendingClub Scala API v6")
-project.setTarget("is_bad")
+project.setTarget("is_bad" mode = "manual")
+val blueprints = project.getBlueprints
+project.train(blueprints(0))
 project.setWorkerCount(20)
 ```
 
 ### Spark Example 
-```
+```code :scala
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.SparkContext
 import org.apache.log4j.Logger
 import org.apache.log4j.Level
-import com.datarobot._
-import com.datarobot.Implicits._
+import com.github.timsetsfire.datarobot._
+import com.github.timsetsfire.datarobot.Implicits._
 
 Logger.getLogger("org").setLevel(Level.WARN)
 Logger.getLogger("akka").setLevel(Level.WARN)
