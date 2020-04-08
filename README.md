@@ -26,6 +26,8 @@ While `collect` executes given job in all partitions (executors side) and collec
 I've tested this out with a 1.5GB dataset on Databrick Community.  
 Cluster details: 0 Workers, 1 Driver: 15.3 GB Memory, 2 Cores, 1 DBU
 
+It runs a little slow, and it may make more sense to actually write the data to disk and then load, but have not comparison in terms of timing.  
+
 
 ```code :scala
 import org.apache.spark.SparkConf
