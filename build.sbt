@@ -2,7 +2,6 @@ scalaVersion := "2.11.8"
 
 version := "0.1.0"
 
-ThisBuild / organization := "com.github.timsetsfire.datarobot"
 
 // libraryDependencies ++= Seq(
 //     "com.typesafe.akka" %% "akka-actor" % "2.5.13",
@@ -24,9 +23,11 @@ libraryDependencies  ++= Seq(
   "org.json4s" %% "json4s-native" % "3.5.3", // compatible with spark
   // "org.json4s" %% "json4s-jackson" % "3.5.3", // comparitlbe with spark
   "org.json4s" %% "json4s-ext" % "3.5.3",     // compatible with spark
-  "org.apache.spark" %% "spark-core" % "2.4.4" % "provided",
-  "org.apache.spark" %% "spark-sql" % "2.4.4" % "provided",
-  "org.apache.spark" %% "spark-mllib" % "2.4.4" % "provided"
+  "org.apache.spark" %% "spark-core" % "2.4.4" ,
+  "org.apache.spark" %% "spark-sql" % "2.4.4" ,
+  "org.apache.spark" %% "spark-mllib" % "2.4.4" , 
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
+  "ai.h2o" %% "sparkling-water-core" % "2.0.0"
 )
 
 // libraryDependencies ++= Seq(scalaVersion("org.scala-lang" % "scala-reflect" % _))

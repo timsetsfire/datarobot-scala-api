@@ -16,7 +16,8 @@ object EnumFormats {
         new EnumNameSerializer(ValidationType),
         new EnumNameSerializer(VariableTypeTransform),
         new EnumNameSerializer(FeatureAssociationMetric),
-        new EnumNameSerializer(FeatureAssociationType)
+        new EnumNameSerializer(FeatureAssociationType),
+        new EnumNameSerializer(JobType)
     )
 }
 
@@ -111,6 +112,25 @@ object FeatureAssociationType extends Enumeration {
         val ASSOCIATION = Value("association")
         val CORRELATION = Value("correlation")
     }
+
+object JobType extends Enumeration { 
+    type JobType = Value
+    val FEATURE_IMPACT = Value("featureImpact")
+    val FEATURE_EFFECTS = Value("featureEffects")
+    val FEATURE_FIT = Value("featureFit")
+    val MODEL = Value("model")
+    val MODEL_EXPORT = Value("modelExport")
+    val PREDICT = Value("predict")
+    val TRAINING_PREDICTIONS = Value("trainingPredictions")
+    val PRIME_MODEL = Value("primeModel")
+    val PRIME_RULESETS = Value("primeRulesets")
+    val PRIME_VALIDATION = Value("primeDownloadValidation")
+    val REASON_CODES = Value("reasonCodes")
+    val REASON_CODES_INITIALIZATION = Value("reasonCodesInitialization")
+    val PREDICTION_EXPLANATIONS = Value("predictionExplanations")
+    val PREDICTION_EXPLANATIONS_INITIALIZATION = Value("predictionExplanationsInitialization")
+    val RATING_TABLE_VALIDATION = Value("validateRatingTable")
+}
     
 
 object DefaultTimeout extends Enumeration { 

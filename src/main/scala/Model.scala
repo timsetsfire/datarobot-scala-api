@@ -277,47 +277,103 @@ class Model(
   /**
     * @todo
     */
-  def requestFeatureFit() = ???
+  def requestFeatureFit()(implicit client: DataRobotClient) = {
+    val r = client.post(s"projects/${projectId}/models/${id}/featureFit/").asString
+    val loc = r.code match {
+      case 202 => r.headers("location")(0).replace(client.endpoint, "")
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    val job = client.get(loc).asString
+    parse(job.body).extract[Job]
+  }
 
   /**
     * @todo
     */
-  def requestAndGetFeatureFit() = ???
+  def requestAndGetFeatureFit(maxWait: Int = 600000)(implicit client: DataRobotClient) = {
+    val r = client.post(s"projects/${projectId}/models/${id}/featureFit/").asString
+    val loc = r.code match {
+      case 202 => r.headers("location")(0).replace(client.endpoint, "")
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    val job = client.get(loc).asString
+    parse(job.body).extract[Job].getResultWhenComplete(maxWait)
+  }
 
   /**
     * @todo
     */
-  def getFeatureFit() = ???
+  def getFeatureFit()(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/models/${id}/featureFit/").asString
+    r.code match { 
+      case 200 => parse(r.body).extract[FeatureFits]
+      case _ => throw new Exception(s"${r.code}: ${r.body}")
+    }
+  }
 
   /**
     * @todo
     */
-  def requestFeatureEffect() = ???
+  def requestFeatureEffects()(implicit client: DataRobotClient) = {
+    val r = client.post(s"projects/${projectId}/models/${id}/featureEffects/").asString
+    val loc = r.code match {
+      case 202 => r.headers("location")(0).replace(client.endpoint, "")
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    val job = client.get(loc).asString
+    parse(job.body).extract[Job]
+  }
 
-  /**
-    * @todo
-    */
-  def requestAndGetFeatureEffect() = ???
 
-  /**
-    * @todo
-    */
-  def getFeatureEffect() = ???
+  def requestAndGetFeatureEffects(maxWait: Int = 600000)(implicit client: DataRobotClient) = {
+    val r = client.post(s"projects/${projectId}/models/${id}/featureEffects/").asString
+    val loc = r.code match {
+      case 202 => r.headers("location")(0).replace(client.endpoint, "")
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    val job = client.get(loc).asString
+    parse(job.body).extract[Job].getResultWhenComplete(maxWait)
+  }
 
-  /**
-    * @todo
-    */
-  def requestFeatureImpact() = ???
 
-  /**
-    * @todo
-    */
-  def requestAndGetFeatureImpact() = ???
+  def getFeatureEffects()(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/models/${id}/featureEffects/").asString
+    r.code match { 
+      case 200 => parse(r.body).extract[FeatureEffects]
+      case _ => throw new Exception(s"${r.code}: ${r.body}")
+    }
+  }
 
-  /**
-    * @todo
-    */
-  def getFeatureImpact() = ???
+
+  def requestFeatureImpact()(implicit client: DataRobotClient) = {
+    val r = client.post(s"projects/${projectId}/models/${id}/featureImpact/").asString
+    val loc = r.code match {
+      case 202 => r.headers("location")(0).replace(client.endpoint, "")
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    val job = client.get(loc).asString
+    parse(job.body).extract[Job]
+  }
+
+
+  def requestAndGetFeatureImpact(maxWait: Int = 600000)(implicit client: DataRobotClient) = {
+    val r = client.post(s"projects/${projectId}/models/${id}/featureImpact/").asString
+    val loc = r.code match {
+      case 202 => r.headers("location")(0).replace(client.endpoint, "")
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    val job = client.get(loc).asString
+    parse(job.body).extract[Job].getResultWhenComplete(maxWait)
+  }
+
+
+  def getFeatureImpact()(implicit client: DataRobotClient) = {
+    val r = client.get(s"projects/${projectId}/models/${id}/featureImpact/").asString
+    r.code match { 
+      case 200 => parse(r.body).extract[FeatureImpacts]
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+  }
 
 }
 

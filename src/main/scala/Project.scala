@@ -255,11 +255,9 @@ class Project(
     }
   }
 
-  /**
-    * @todo implement this
-    */
-  def getAllJobs()(implicit client: DataRobotClient) =
-    throw new NotImplementedError("Nope")
+
+  def getJobs(status: Option[String] = None)(implicit client: DataRobotClient) = Job.getJobs(id, status)
+  def getJob(jobId: String)(implicit client: DataRobotClient) = Job.getJobs(id, jobId)
 
   // association matrix helpers
 
@@ -382,31 +380,8 @@ class Project(
 
   def getModelJob(jobId: String)(implicit client: DataRobotClient) = ModelJob.get(this.id, jobId)
 
-  // def getModelJob(jobId: String)(implicit client: DataRobotClient) = {
-  //   val r = client.get(s"${path}${id}/modelJobs/${jobId}/").asString
-  //   val json = parse(r.body)
-  //   json.extract[ModelJob]
-  // }
-
   def getModelJobs(status: Option[String] = None)(implicit client: DataRobotClient) = ModelJob.getModelJobs(this.id, status)
-  // def getModelJobs(
-  //     status: Option[String] = None
-  // )(implicit client: DataRobotClient) = {
-  //   if (List("queue", "inprogress", "error").contains(status.get)) {
-  //     val r = status match {
-  //       case None => client.get(s"${path}${id}/modelJobs/").asString
-  //       case Some(status) =>
-  //         client
-  //           .get(s"${path}${id}/modelJobs/")
-  //           .params("status" -> status)
-  //           .asString
-  //     }
-  //     val JArray(json) = parse(r.body)
-  //     json.map { j => j.extract[ModelJob] }
-  //   } else {
-  //     throw new Exception(s"don't understand status ${status} request")
-  //   }
-  // }
+  
 
   /**
     * @todo implement this

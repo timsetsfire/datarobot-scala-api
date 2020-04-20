@@ -44,14 +44,14 @@ case class AdvancedOptions(
   downsampledMinorityRows: Option[Int]= None,
   downsampledMajorityRows: Option[Int]= None,
   accuracyOptimizedMb: Option[Boolean] = None,//
-  scaleoutModelingMode: String = "disabled",//
+  scaleoutModelingMode: Option[Boolean] = None,//
   defaultMonotonicIncreasingFeaturelistId: Option[String]= None, // 
   defaultMonotonicDecreasingFeaturelistId: Option[String]= None, //
   onlyIncludeMonotonicBlueprints: Option[Boolean] = None,  //
-  blendBestModels: Boolean = true, //
+  blendBestModels: Option[Boolean] = None, //
   minSecondaryValidationModelCount: Option[Int] = None, //
-  scoringCodeOnly: Boolean = false, //
-  prepareModelForDeployment: Boolean = true, //
+  scoringCodeOnly: Option[Boolean] = None, //
+  prepareModelForDeployment: Option[Boolean] = None, //
   allowedPairwiseInteractionGroups: Option[Seq[Seq[String]]] = None //
 ) {
   override def toString =  writePretty(this)
