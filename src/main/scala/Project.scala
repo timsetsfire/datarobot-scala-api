@@ -65,6 +65,29 @@ class Project(
 
   override def toString = s"Project(${projectName.get})"
 
+  def toDateTimeProject = {
+    new DateTimeProject(
+      id,
+      projectName,
+      fileName,
+      stage,
+      autopilotMode,
+      created,
+      target,
+      metric,
+      partition,
+      recommender,
+      advancedOptions,
+      positiveClass,
+      maxTrainPct,
+      maxTrainRows,
+      scaleoutMaxTrainPct,
+      scaleoutMaxTrainRows,
+      holdoutUnlocked,
+      targetType
+    )
+  }
+
   /** project */
   // implicit val jsonDefaultFormats = DefaultFormats ++ enumFormats
 
@@ -106,12 +129,6 @@ class Project(
       case _   => throw new Exception(s"${r.code}: ${r.body}")
     }
   }
-
-  /**
-    * @todo implement this
-    */
-  def createModelingFeaturelist() =
-    throw new NotImplementedError("This is not a Timeseries project")
 
   /**
     * @return Returns Unit.  Deletes projects
@@ -255,9 +272,10 @@ class Project(
     }
   }
 
-
-  def getJobs(status: Option[String] = None)(implicit client: DataRobotClient) = Job.getJobs(id, status)
-  def getJob(jobId: String)(implicit client: DataRobotClient) = Job.getJobs(id, jobId)
+  def getJobs(status: Option[String] = None)(implicit client: DataRobotClient) =
+    Job.getJobs(id, status)
+  def getJob(jobId: String)(implicit client: DataRobotClient) =
+    Job.getJobs(id, jobId)
 
   // association matrix helpers
 
@@ -369,32 +387,15 @@ class Project(
   /**
     * @todo implement this
     */
-  def getDatetimeModels()(implicit client: DataRobotClient) =
-    throw new NotImplementedError("Nope")
-
-  /**
-    * @todo implement this
-    */
   def getLeaderboardLink()(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
 
-  def getModelJob(jobId: String)(implicit client: DataRobotClient) = ModelJob.get(this.id, jobId)
+  def getModelJob(jobId: String)(implicit client: DataRobotClient) =
+    ModelJob.get(this.id, jobId)
 
-  def getModelJobs(status: Option[String] = None)(implicit client: DataRobotClient) = ModelJob.getModelJobs(this.id, status)
-  
-
-  /**
-    * @todo implement this
-    */
-  def getModelingFeaturelists(projectId: String)(
+  def getModelJobs(status: Option[String] = None)(
       implicit client: DataRobotClient
-  ) = throw new NotImplementedError("This is not a Timeseries project")
-
-  /**
-    * @todo implement this
-    */
-  def getModelingFeatures(projectId: String)(implicit client: DataRobotClient) =
-    throw new NotImplementedError("This is not a Timeseries project")
+  ) = ModelJob.getModelJobs(this.id, status)
 
   /**
     * @todo implement this
@@ -464,7 +465,7 @@ class Project(
       metric: Option[String] = None,
       quickrun: Boolean = false,
       positiveClass: Option[String] = None,
-      partitioningMethod: Option[Partition] = None,
+      partitioningMethod: Option[PartitioningMethod] = None,
       featurelistId: Option[String] = None,
       advancedOptions: Option[AdvancedOptions] = None,
       maxWait: Int = 60000, // need enum for this
@@ -477,8 +478,25 @@ class Project(
       case _         => Map()
     }
     val partitioning = partitioningMethod match {
-      case Some(part) => caseClassToMap(part)
-      case _          => Map()
+      case Some(part) => {
+        part match {
+          case dt: DateTimePartitioningMethod => {
+            val data = _getDataReady(
+              Seq(
+                "datetimePartitionColumn" -> dt.datetimePartitionColumn,
+                "multiseriesIdColumns" -> dt.multiseriesIdColumns
+              )
+            )
+            val r = client
+              .postData(s"projects/${this.id}/multiseriesProperties/", data)
+              .asString
+            val loc = r.headers("location")
+          }
+          case _ => Unit
+        }
+        caseClassToMap(part)
+      }
+      case _ => Map()
     }
     val st = Seq(
       "target" -> target,
@@ -490,11 +508,9 @@ class Project(
       "targetType" -> targetType
     )
     val data = _getDataReady(st ++ advOpt ++ partitioning)
-    println(data)
-    //need to fix
+
     println(client.endpoint + s"projects/${this.id}/aim/")
     val status = client.patch(s"projects/${this.id}/aim/", data).asString
-    //val asyncLocation = response.headers("Location")
     val loc =
       Waiter.waitForAsyncResolution(status.headers("location")(0), maxWait)
     val project = Project.get(loc(0).replace(s"${client.endpoint}${path}", ""))
@@ -766,7 +782,7 @@ object Project {
       metric: Option[AccuracyMetric.Value] = None,
       autoPilotOn: Boolean = true,
       blueprintThreshold: Option[Int] = Some(1),
-      partitioningMethod: Option[Partition] = None,
+      partitioningMethod: Option[PartitioningMethod] = None,
       positiveClass: Option[String] = None,
       targetType: Option[TargetType.Value] = None,
       mode: String = "autopilot",
@@ -783,19 +799,40 @@ object Project {
     )
     // set project target
 
+    val partitioning = partitioningMethod match {
+      case Some(part) => {
+        part match {
+          case dt: DateTimePartitioningMethod => {
+            val data = _getDataReady(
+              Seq(
+                "datetimePartitionColumn" -> dt.datetimePartitionColumn,
+                "multiseriesIdColumns" -> dt.multiseriesIdColumns
+              )
+            )
+            val r = client
+              .postData(s"projects/${project.id}/multiseriesProperties/", data)
+              .asString
+            val loc = r.headers("location")
+          }
+          case _ => Unit
+        }
+        caseClassToMap(part)
+      }
+      case _ => Map()
+    }
+
     val initData: Seq[(String, Any)] = Seq(
       "target" -> target,
       "workerCount" -> workerCount,
       "metric" -> metric,
       "autoPilotOn" -> autoPilotOn,
       "blueprintThreshold" -> blueprintThreshold,
-      "partitioningMethod" -> partitioningMethod,
       "positiveClass" -> positiveClass,
       "targetType" -> targetType,
       "mode" -> mode,
       "maxWait" -> maxWait
     ).filter(_._1 != None)
-    val data = _getDataReady(initData)
+    val data = _getDataReady(initData ++ partitioning)
 
     client.patch(s"projects/${project.id}/aim", data).asString
 

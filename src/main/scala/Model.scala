@@ -46,12 +46,12 @@ class Model(
     val projectId: String,
     val samplePct: Option[Double],
     val trainingDuration: Option[String],
-    val trainingRowCount: Option[String],
+    val trainingRowCount: Option[Int],
     val trainingStartDate: Option[String],
     val trainingEndDate: Option[String],
     val modelCategory: String,
     val isFrozen: Boolean = false,
-    val metrics: Map[String, Map[String, Option[Double]]],
+    val metrics: Map[String, Metric],
     val modelType: String,
     val blueprintId: String,
     val monotonicIncreasingFeaturelistId: Option[String] = None,
@@ -59,11 +59,11 @@ class Model(
     val supportsMonotonicConstraints: Option[Boolean] = None,
     val id: String,
     var isStarred: Boolean = false,
-    var predictionThreshold: Option[String],
-    var predictionThresholdReadOnly: Option[String]
+    var predictionThreshold: Option[Double],
+    var predictionThresholdReadOnly: Option[Boolean]
 ) {
 
-  import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
+  
   override def toString = s"Model(${modelType})"
 
   def advancedTuning(description: String)(implicit client: DataRobotClient) = {
@@ -448,12 +448,12 @@ class FrozenModel(
     projectId: String,
     samplePct: Option[Double],
     trainingDuration: Option[String],
-    trainingRowCount: Option[String],
+    trainingRowCount: Option[Int],
     trainingStartDate: Option[String],
     trainingEndDate: Option[String],
     modelCategory: String,
     isFrozen: Boolean = true,
-    metrics: Map[String, Map[String, Option[Double]]],
+    metrics: Map[String, Metric],
     modelType: String,
     blueprintId: String,
     monotonicIncreasingFeaturelistId: Option[String] = None,
@@ -461,8 +461,8 @@ class FrozenModel(
     supportsMonotonicConstraints: Option[Boolean] = None,
     id: String,
     isStarred: Boolean = false,
-    predictionThreshold: Option[String],
-    predictionThresholdReadOnly: Option[String]
+    predictionThreshold: Option[Double],
+    predictionThresholdReadOnly: Option[Boolean]
 ) extends Model(
       featurelistId,
       processes,
@@ -488,3 +488,11 @@ class FrozenModel(
     ) {
   override def toString = s"FrozenModel(${modelType})"
 }
+
+
+case class Metric(backtesting: Option[Double], 
+    holdout: Option[Double], 
+    backtestingScores: Seq[Option[Double]],
+    crossValdiation: Option[Double],
+    validation: Option[Double]
+  )

@@ -74,7 +74,7 @@ class ModelJob(
     isBlocked: Boolean,
     val processes: Array[String],
     projectId: String,
-    val samplePct: Float,
+    val samplePct: Option[Float] = None,
     val modelType: String,
     val featurelistId: String,
     val modelCategory: String,
