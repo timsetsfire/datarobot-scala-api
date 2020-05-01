@@ -31,7 +31,7 @@ import com.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
 case class Calendar(
     Id: String,
     created: String,
-    var name: String,
+    name: String,
     source: String,
     numEvents: Int,
     numEventTypes: Int,
@@ -52,11 +52,11 @@ case class Calendar(
     val data = _getDataReady(Seq(("calendarName", name)))
     val r = client.patch(s"${path}${Id}/", data).asString
     r.code match {
-      case 200 => this.name = name
+      case 200 => Unit
       case _ =>
         throw new Exception(s"Something went wrong. Response return: ${r.code}")
     }
-    this
+    Calendar.get(Id)
   }
 
   /**
