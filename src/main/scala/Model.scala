@@ -267,83 +267,96 @@ class Model(
     }
     val job = client.get(loc).asString
     job.code match {
-      case 200 => parse(job.body).extract[ModelJob]
+      case 200 => parse(job.body).extract[Job]
       case _   => throw new Exception(s"${r.code}: ${r.body}")
     }
   }
 
   // need to do all confusion chart stuff as well
 
-  /**
-    * @todo
-    */
-  def requestFeatureFit()(implicit client: DataRobotClient) = {
-    val r = client.post(s"projects/${projectId}/models/${id}/featureFit/").asString
-    val loc = r.code match {
-      case 202 => r.headers("location")(0).replace(client.endpoint, "")
-      case _   => throw new Exception(s"${r.code}: ${r.body}")
-    }
-    val job = client.get(loc).asString
-    parse(job.body).extract[Job]
+  // def requestFeatureFit()(implicit client: DataRobotClient) = {
+  //   val r = client.post(s"projects/${projectId}/models/${id}/featureFit/").asString
+  //   val loc = r.code match {
+  //     case 202 => r.headers("location")(0).replace(client.endpoint, "")
+  //     case _   => throw new Exception(s"${r.code}: ${r.body}")
+  //   }
+  //   val job = client.get(loc).asString
+  //   parse(job.body).extract[Job]
+  // }
+
+  // def requestAndGetFeatureFit(source: String = "validation", maxWait: Int = 600000)(implicit client: DataRobotClient) = {
+  //   val r = client.post(s"projects/${projectId}/models/${id}/featureFit/").asString
+  //   val loc = r.code match {
+  //     case 202 => r.headers("location")(0).replace(client.endpoint, "")
+  //     case _   => throw new Exception(s"${r.code}: ${r.body}")
+  //   }
+  //   val job = client.get(loc).param("source", source).asString
+  //   parse(job.body).extract[Job].getResultWhenComplete(maxWait)
+  // }
+
+  // def getFeatureFit(source: String = "validation")(implicit client: DataRobotClient) = {
+  //   val r = client.get(s"projects/${projectId}/models/${id}/featureFit/").param("source", source).asString
+  //   r.code match { 
+  //     case 200 => parse(r.body).extract[FeatureFits]
+  //     case _ => throw new Exception(s"${r.code}: ${r.body}")
+  //   }
+  // }
+
+  // def requestFeatureEffects()(implicit client: DataRobotClient) = {
+  //   val r = client.post(s"projects/${projectId}/models/${id}/featureEffects/").asString
+  //   val loc = r.code match {
+  //     case 202 => r.headers("location")(0).replace(client.endpoint, "")
+  //     case _   => throw new Exception(s"${r.code}: ${r.body}")
+  //   }
+  //   val job = client.get(loc).asString
+  //   parse(job.body).extract[Job]
+  // }
+
+  // def requestAndGetFeatureEffects(source: String = "validation", maxWait: Int = 600000)(implicit client: DataRobotClient) = {
+  //   val r = client.post(s"projects/${projectId}/models/${id}/featureEffects/").asString
+  //   val loc = r.code match {
+  //     case 202 => r.headers("location")(0).replace(client.endpoint, "")
+  //     case _   => throw new Exception(s"${r.code}: ${r.body}")
+  //   }
+  //   val job = client.get(loc).param("source", source).asString
+  //   parse(job.body).extract[Job].getResultWhenComplete(maxWait)
+  // }
+
+  // def getFeatureEffects(source: String = "validation")(implicit client: DataRobotClient) = {
+  //   val r = client.get(s"projects/${projectId}/models/${id}/featureEffects/").param("source", source).asString
+  //   r.code match { 
+  //     case 200 => parse(r.body).extract[FeatureEffects]
+  //     case _ => throw new Exception(s"${r.code}: ${r.body}")
+  //   }
+  // }
+
+  def requestFeatureFit(backtestIndex: Option[String] = None)(implicit client: DataRobotClient) = {
+    FeatureInsights.requestFeatureInsights("models", "featureFit")(projectId, id, backtestIndex)
+  }
+  def requestAndGetFeatureFit(source: String = "validation", backtestIndex: Option[String] = None)(implicit client: DataRobotClient) = {
+    val ff = FeatureInsights.requestAndGetFeatureInsights("models", "featureFit")(projectId, id, source, backtestIndex)
+    ff.asInstanceOf[FeatureFits]
+  }
+  def getFeatureFit(source: String = "validation", backtestIndex: Option[String] = None)(implicit client: DataRobotClient) = {
+    val ff = FeatureInsights.getFeatureInsights("models", "featureFit")(projectId, id, source, backtestIndex)
+    ff.asInstanceOf[FeatureFits]
   }
 
-  /**
-    * @todo
-    */
-  def requestAndGetFeatureFit(maxWait: Int = 600000)(implicit client: DataRobotClient) = {
-    val r = client.post(s"projects/${projectId}/models/${id}/featureFit/").asString
-    val loc = r.code match {
-      case 202 => r.headers("location")(0).replace(client.endpoint, "")
-      case _   => throw new Exception(s"${r.code}: ${r.body}")
-    }
-    val job = client.get(loc).asString
-    parse(job.body).extract[Job].getResultWhenComplete(maxWait)
+
+  def requestFeatureEffects(backtestIndex: Option[String] = None)(implicit client: DataRobotClient) = {
+    FeatureInsights.requestFeatureInsights("models", "featureEffects")(projectId, id, backtestIndex)
+  }
+  def requestAndGetFeatureEffects(source: String = "validation", backtestIndex: Option[String] = None)(implicit client: DataRobotClient) = {
+    val ff = FeatureInsights.requestAndGetFeatureInsights("models", "featureEffects")(projectId, id, source, backtestIndex)
+    ff.asInstanceOf[FeatureEffects]
+  }
+  def getFeatureEffects(source: String = "validation", backtestIndex: Option[String] = None)(implicit client: DataRobotClient) = {
+    val ff = FeatureInsights.getFeatureInsights("models", "featureEffects")(projectId, id, source, backtestIndex)
+    ff.asInstanceOf[FeatureEffects]
   }
 
-  /**
-    * @todo
-    */
-  def getFeatureFit()(implicit client: DataRobotClient) = {
-    val r = client.get(s"projects/${projectId}/models/${id}/featureFit/").asString
-    r.code match { 
-      case 200 => parse(r.body).extract[FeatureFits]
-      case _ => throw new Exception(s"${r.code}: ${r.body}")
-    }
-  }
-
-  /**
-    * @todo
-    */
-  def requestFeatureEffects()(implicit client: DataRobotClient) = {
-    val r = client.post(s"projects/${projectId}/models/${id}/featureEffects/").asString
-    val loc = r.code match {
-      case 202 => r.headers("location")(0).replace(client.endpoint, "")
-      case _   => throw new Exception(s"${r.code}: ${r.body}")
-    }
-    val job = client.get(loc).asString
-    parse(job.body).extract[Job]
-  }
-
-
-  def requestAndGetFeatureEffects(maxWait: Int = 600000)(implicit client: DataRobotClient) = {
-    val r = client.post(s"projects/${projectId}/models/${id}/featureEffects/").asString
-    val loc = r.code match {
-      case 202 => r.headers("location")(0).replace(client.endpoint, "")
-      case _   => throw new Exception(s"${r.code}: ${r.body}")
-    }
-    val job = client.get(loc).asString
-    parse(job.body).extract[Job].getResultWhenComplete(maxWait)
-  }
-
-
-  def getFeatureEffects()(implicit client: DataRobotClient) = {
-    val r = client.get(s"projects/${projectId}/models/${id}/featureEffects/").asString
-    r.code match { 
-      case 200 => parse(r.body).extract[FeatureEffects]
-      case _ => throw new Exception(s"${r.code}: ${r.body}")
-    }
-  }
-
+  def getFeatureFitMetaData()(implicit client: DataRobotClient) = FeatureInsights.getFeatureInsightsMetaData("models", "featureFit")(projectId, id)
+  def getFeatureEffectsMetaData()(implicit client: DataRobotClient) = FeatureInsights.getFeatureInsightsMetaData("models", "featureEffects")(projectId, id)
 
   def requestFeatureImpact()(implicit client: DataRobotClient) = {
     val r = client.post(s"projects/${projectId}/models/${id}/featureImpact/").asString

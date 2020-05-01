@@ -271,6 +271,10 @@ class Project(
       case None    => List()
     }
   }
+  /**
+   * @todo
+   */
+  def setAccessList()(implicit client: DataRobotClient) = ??? 
 
   def getJobs(status: Option[String] = None)(implicit client: DataRobotClient) =
     Job.getJobs(id, status)
@@ -747,8 +751,10 @@ object Project {
   /** Delete a given project
     */
   def delete(projectId: String)(implicit client: DataRobotClient) = {
-    client.delete(s"$path$projectId").asString
+    client.delete(s"$path$projectId/").asString
   }
+
+
 
   /** Get a project
     *  @param projectId

@@ -130,6 +130,7 @@ object JobType extends Enumeration {
     val PREDICTION_EXPLANATIONS = Value("predictionExplanations")
     val PREDICTION_EXPLANATIONS_INITIALIZATION = Value("predictionExplanationsInitialization")
     val RATING_TABLE_VALIDATION = Value("validateRatingTable")
+    val SERIES_ACCURACY = Value("series_accuracy")
 }
     
 

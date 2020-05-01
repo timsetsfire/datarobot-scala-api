@@ -33,6 +33,7 @@ case class AdvancedTuningSession(model: Model, description: Option[String] = Non
     val advTuningMap: MMap[String, Seq[Seq[(String, Any)]]] = MMap("tuningParameters" -> Seq())
 
     def getTaskNames = privateMap.keys
+    
     def getParameterNames(taskName: TaskName) = {
         privateMap(taskName)
     }

@@ -58,26 +58,29 @@ object Blueprint {
   
   def get(projectId: String, blueprintId: String)(implicit client: DataRobotClient) = { 
     val r = client.get(s"projects/${projectId}/blueprints/${blueprintId}/").asString
-    val result = parse(r.body) // comding from jackson.JsonMethods
+    val result = parse(r.body) // coming from jackson.JsonMethods
     result.extract[Blueprint]
   }
 
   def getBlueprintChart(projectId: String, blueprintId: String)(implicit client: DataRobotClient) = {
     val r = client.get(s"projects/${projectId}/blueprints/${blueprintId}/blueprintChart/").asString
     val result = parse(r.body)
-    result.extract[Map[String, Any]]
+    val JArray(json) = result
+    json.map{ _.extract[Map[String, Any]]}
   }
 
   def getReducedBlueprintChart(projectId: String, modelId: String)(implicit client: DataRobotClient) = {
     val r = client.get(s"projects/${projectId}/models/${modelId}/blueprintChart/").asString
     val result = parse(r.body)
-    result.extract[Map[String, Any]]
+    val JArray(json) = result
+    json.map{ _.extract[Map[String, Any]]}
   }
 
   def getBlueprintDocumentation(projectId: String, blueprintId: String)(implicit client: DataRobotClient) = {
     val r = client.get(s"projects/${projectId}/blueprints/${blueprintId}/blueprintDocs/").asString  
     val result = parse(r.body)
-    result.extract[Map[String, Any]]
+    val JArray(json) = result
+    json.map{ _.extract[Map[String, Any]]}
   }
   
 }
