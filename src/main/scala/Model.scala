@@ -140,6 +140,9 @@ class Model(
       .getOrElse("missingValuesReport", List(Map()))
   }
 
+    def getModelBlueprintChart()(implicit client: DataRobotClient) =
+    Blueprint.getReducedBlueprintChart(this.projectId, this.id)
+
   def getScoringCode(
       destination: Option[String] = None,
       sourceCode: Boolean = false
@@ -388,6 +391,48 @@ class Model(
     }
   }
 
+// request predictions
+  // this does not support the legacy method
+  def requestPredictions(
+  datasetId: String,
+  includePredictionIntervals: Option[Boolean] = None, 
+  predictionIntervalSize: Option[Int] = None, 
+  forecastPoint: Option[String] = None,
+  predictionsStartDate: Option[String] = None, 
+  predictionsEndDate: Option[String] = None)(implicit client: DataRobotClient) = { 
+    
+    val tsPrediction = List(forecastPoint, predictionsStartDate, predictionsEndDate).exists{ _.isDefined}
+    (this, tsPrediction) match { 
+      case (_: Model, true) => throw new Exception("model is not of type DateTimeModel.")
+      case (_, _) => Unit
+    }
+
+    val optionalData = Seq(
+      ("includePredictionIntervals", includePredictionIntervals),
+      ("predictionIntervalSize", predictionIntervalSize),
+      ("forecastPoint", forecastPoint),
+      ("predictionsStartDate", predictionsStartDate),
+      ("predictionsEndDate", predictionsEndDate)
+    ).filter( _._2.isDefined).map{ case(k,o) => (k, o.get.toString)}
+
+    val data = Seq(("datasetId", datasetId), ("modelId", id))
+
+    val r = client.postData(s"projects/${this.projectId}/predictions/", _getDataReady(data)).params(optionalData).asString
+    val loc = r.code match {
+      case 202 => r.headers("location")(0).replace(client.endpoint, "")
+      case _   => throw new Exception(s"${r.code}: ${r.body}")
+    }
+    val job = client.get(loc).asString
+    parse(job.body).extract[PredictJob]
+    
+  }
+
+// def getPredictions(predictionId: String)(implicit client: DataRobotClient) = { 
+//   val r = client.get(s"projects/$projectId/predictions/$predictionId/").asString 
+//   parse(r.body).extract[Predictions[BinaryPrediction]]
+// }
+
+
 }
 
 object Model {
@@ -431,13 +476,15 @@ object Model {
     json.map { j => j.extract[Model] }
   }
 
+
+
   def getRecommendedModel(
       projectId: String
   )(implicit client: DataRobotClient) = {
     val r = client
       .get(s"projects/${projectId}/recommendedModels/recommendedModel/")
       .asString
-    parse(r.body).extract[Model]
+    parse(r.body).extract[ModelRecommendation]
   }
 
   def getRecommendedModels(
@@ -445,12 +492,17 @@ object Model {
   )(implicit client: DataRobotClient) = {
     val r = client.get(s"projects/${projectId}/recommendedModels/").asString
     val JArray(json) = parse(r.body)
-    json.map { j => j.extract[Model] }
+    json.map { j => j.extract[ModelRecommendation] }
   }
 
   def deleteModel(projectId: String, modelId: String)(
       implicit client: DataRobotClient
   ) = ???
+
+
+  
+
+  // retrieve predictions
 
 }
 
@@ -509,3 +561,5 @@ case class Metric(backtesting: Option[Double],
     crossValdiation: Option[Double],
     validation: Option[Double]
   )
+
+case class ModelRecommendation(projectId: String, recommendationType: ModelRecommendationType.Value, modelId: String)

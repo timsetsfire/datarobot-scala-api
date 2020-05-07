@@ -17,7 +17,8 @@ object EnumFormats {
         new EnumNameSerializer(VariableTypeTransform),
         new EnumNameSerializer(FeatureAssociationMetric),
         new EnumNameSerializer(FeatureAssociationType),
-        new EnumNameSerializer(JobType)
+        new EnumNameSerializer(JobType),
+        new EnumNameSerializer(ModelRecommendationType)
     )
 }
 
@@ -144,11 +145,18 @@ object DefaultTimeout extends Enumeration {
 
 
 object ModelingMode extends Enumeration { 
-    type ModelModel = Value 
+    type ModelingMode = Value 
     val AUTOPILOT = Value("auto")
     val QUICKRUN = Value("quick")
     val MANUAL = Value("manual")
     val COMPREHENSIVE = Value("comprehensive")
+}
+
+object ModelRecommendationType extends Enumeration { 
+    type ModelRecommendationType = Value
+    val MOST_ACCURATE = Value("Most Accurate")
+    val FAST_AND_ACCURATE = Value("Fast & Accurate")
+    val RECOMMENDED = Value("Recommended for Deployment")
 }
 
 object ProjectStage extends Enumeration {

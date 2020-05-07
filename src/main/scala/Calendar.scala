@@ -1,7 +1,5 @@
-package com.github.timsetsifre.datarobot
+package com.github.timsetsfire.datarobot
 
-import scalaj.http.Multipart
-import com.github.timsetsfire.datarobot.Utilities._
 import scala.util.Try
 import java.io.{File, FileInputStream}
 import scalaj.http.MultiPart
@@ -15,6 +13,8 @@ import org.json4s.{DefaultFormats, Extraction, JValue}
 import com.github.timsetsfire.datarobot.Utilities._
 import com.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
 
+import com.github.timsetsfire.datarobot.enums._
+import com.github.timsetsfire.datarobot.Implicits._
 /**
   * @param Id – I know i know.  Capitalized field, ugh.  Did this the return from api request has this capitalized
   * @param created ISO-8601 string with the time that this calendar was created
@@ -65,11 +65,11 @@ case class Calendar(
   def setAccessControl()(implicit client: DataRobotClient) = ???
   def getAccessControl()(implicit client: DataRobotClient) = ???
 }
-object Calender {
+object Calendar {
   val path = "calendars/"
-  def create(file: String, name: String)(implicit client: DataRobotClient) = {
+  def create(file: String, name: Option[String] = None, multiseriesIdColumns: Option[Array[String]], maxWait: Int = 60000)(implicit client: DataRobotClient) = {
     val fs: java.io.InputStream =
-      new java.io.FileInputStream("./data/event_calendar_sales.csv")
+      new java.io.FileInputStream(file)
     val bytesInStream = fs.available
     val dataMP = MultiPart(
       name = "file",
@@ -79,15 +79,22 @@ object Calender {
       numBytes = bytesInStream,
       lenWritten => Unit
     )
-    val nameMP = MultiPart(
-      name = "name",
-      filename = "",
-      mime = "text/plain",
-      data = name
-    )
+    val nameMP = name match { 
+      case Some(s) => MultiPart(name = "name",filename = "", mime = "text/plain", data = s) 
+      case None => MultiPart(name = "name",filename = "", mime = "text/plain", data = file) 
+    }
+
+    val multiseriesMP = multiseriesIdColumns match { 
+      // case Some(s) => throw new Exception("not yet implemented to handle caldendar with Multiseries ID")
+      case Some(s) => MultiPart(name = "name",filename = "", mime = "text/plain", data = write(s)) :: Nil
+      case None => Nil
+    }
+
+    val mpData = dataMP :: Nil
+    val params = Seq( ("multiseriesIdColumns", multiseriesIdColumns), ("name", name)).filter{ _._2.isDefined}.map{ case(k,v) => (k, write(v))}
 
     val status =
-      client.postMulti("calendars/fileUpload/", nameMP, dataMP).asString
+      client.postMulti("calendars/fileUpload/", mpData:_*).params(params).asString
     status.code match {
       case 202    => Unit
       case x: Int => throw new Exception(s"$x: ${status.body}")
@@ -95,7 +102,7 @@ object Calender {
     val loc =
       Waiter.waitForAsyncResolution(status.headers("location")(0), maxWait)
 
-    val r = client.get(loc.replace(client.endpoint, "")).asString
+    val r = client.get(loc(0).replace(client.endpoint, "")).asString
     parse(r.body).extract[Calendar]
   }
 

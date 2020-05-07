@@ -277,9 +277,9 @@ class Project(
   def setAccessList()(implicit client: DataRobotClient) = ??? 
 
   def getJobs(status: Option[String] = None)(implicit client: DataRobotClient) =
-    Job.getJobs(id, status)
+    Job.getJobs(id, "jobs", status)
   def getJob(jobId: String)(implicit client: DataRobotClient) =
-    Job.getJobs(id, jobId)
+    Job.get(id, jobId)
 
   // association matrix helpers
 
@@ -394,18 +394,17 @@ class Project(
   def getLeaderboardLink()(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
 
-  def getModelJob(jobId: String)(implicit client: DataRobotClient) =
-    ModelJob.get(this.id, jobId)
 
-  def getModelJobs(status: Option[String] = None)(
-      implicit client: DataRobotClient
-  ) = ModelJob.getModelJobs(this.id, status)
+  def getModelJob(jobId: String)(implicit client: DataRobotClient) = Job.get(id, jobId, "modelJobs")
+  def getModelJobs(status: Option[String] = None)(implicit client: DataRobotClient) = Job.getJobs(id, "modelJobs", status) //ModelJob.getModelJobs(this.id, status)
 
   /**
     * @todo implement this
     */
-  def getPredictJobs(projectId: String)(implicit client: DataRobotClient) =
-    throw new NotImplementedError("Nope")
+
+  def getPredictJob(jobId: String)(implicit client: DataRobotClient) = Job.get(id, jobId, "predictJobs")
+  def getPredictJobs(status: Option[String] = None)(implicit client: DataRobotClient) = Job.getJobs(id, "predictJobs", status)
+    
 
   /**
     * @todo implement this

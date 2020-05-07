@@ -31,7 +31,12 @@ object Utilities {
           } else if (resp.code != 200) {
             throw new Exception(s"The server gave an unexpected response. Status Code ${resp.code}: ${resp.body}")
           } else {
-          asyncHelper(r, maxWait)
+            val check = parse(resp.body).extract[Map[String, Any]]
+            check("status") match { 
+              case "ERROR" => throw new Exception(check("message").toString)
+              case _ => asyncHelper(r, maxWait)
+            }
+          
           }
         }
       }
