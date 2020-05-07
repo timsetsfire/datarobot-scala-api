@@ -65,7 +65,7 @@ class Job(
       case FEATURE_EFFECTS => data.extract[FeatureEffects]
       case FEATURE_FIT     => data.extract[FeatureFits]
       case MODEL           => data.extract[Model]
-      case PRIME_RULESETS  => data.extract[PrimeRulesets]
+      case PRIME_RULESETS  => data.extract[List[PrimeRuleset]]
       case PRIME_MODEL => data.extract[PrimeModel]
       case PRIME_VALIDATION => data.extract[PrimeFileMetaData]
       case PREDICT => {
