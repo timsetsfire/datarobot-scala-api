@@ -118,7 +118,7 @@ class Model(
 
   def getLiftChart(source: Source.Value)(implicit client: DataRobotClient) = {
     val r =
-      client.get(s"projects/${projectId}/models/${id}/missingReport/").asString
+      client.get(s"projects/${projectId}/models/${id}/Lift/").asString
     r.code match {
       case 200 => parse(r.body).extract[LiftChart]
       case _   => throw new Exception(s"${r.code}: ${r.body}")
@@ -558,7 +558,7 @@ class FrozenModel(
 case class Metric(backtesting: Option[Double], 
     holdout: Option[Double], 
     backtestingScores: Seq[Option[Double]],
-    crossValdiation: Option[Double],
+    crossValidation: Option[Double],
     validation: Option[Double]
   )
 

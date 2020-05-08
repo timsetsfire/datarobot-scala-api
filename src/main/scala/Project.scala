@@ -271,10 +271,11 @@ class Project(
       case None    => List()
     }
   }
+
   /**
-   * @todo
-   */
-  def setAccessList()(implicit client: DataRobotClient) = ??? 
+    * @todo
+    */
+  def setAccessList()(implicit client: DataRobotClient) = ???
 
   def getJobs(status: Option[String] = None)(implicit client: DataRobotClient) =
     Job.getJobs(id, "jobs", status)
@@ -323,33 +324,41 @@ class Project(
         FeatureAssociationMetric.MUTUALINFO,
       atype: FeatureAssociationType.Value = FeatureAssociationType.ASSOCIATION,
       featurelistId: Option[String] = None
-  )(implicit client: DataRobotClient) = {
-    val url = s"${path}${this.id}/featureAssociationMatrix/"
-    val params: Seq[(String, String)] = Seq(
-      "metric" -> FeatureAssociationMetric.MUTUALINFO.toString,
-      "type" -> FeatureAssociationType.ASSOCIATION.toString
+  )(implicit client: DataRobotClient) =
+    FeatureAssociations.getFeatureAssocationMatrix(
+      id,
+      metric,
+      atype,
+      featurelistId
     )
-    val fam: Counter2[String, String, Double] = Counter2()
-    // val fam2: Counter2[String, String, Double] = Counter2()
-    val r = featurelistId match {
-      case Some(fls) =>
-        client.get(url).params(params ++ Seq("featurelistId" -> fls)).asString
-      case _ => client.get(url).params(params).asString
-    }
-    val map = r.code match {
-      case 200 => parse(r.body).extract[Map[String, List[Map[String, Any]]]]
-      case _   => throw new Exception(s"${r.code}: ${r.body}")
-    }
-    map("strengths").foreach { map =>
-      fam.update(
-        map("feature1").toString,
-        map("feature2").toString,
-        map("statistic").asInstanceOf[Number].doubleValue
-      )
-    }
-    parse(r.body).extract[Map[String, List[Map[String, Any]]]]
-    (fam, map("features"))
-  }
+
+  // {
+  //   val url = s"${path}${this.id}/featureAssociationMatrix/"
+  //   val params: Seq[(String, String)] = Seq(
+  //     "metric" -> FeatureAssociationMetric.MUTUALINFO.toString,
+  //     "type" -> FeatureAssociationType.ASSOCIATION.toString
+  //   )
+  //   val fam: Counter2[String, String, Double] = Counter2()
+  //   // val fam2: Counter2[String, String, Double] = Counter2()
+  //   val r = featurelistId match {
+  //     case Some(fls) =>
+  //       client.get(url).params(params ++ Seq("featurelistId" -> fls)).asString
+  //     case _ => client.get(url).params(params).asString
+  //   }
+  //   val map = r.code match {
+  //     case 200 => parse(r.body).extract[Map[String, List[Map[String, Any]]]]
+  //     case _   => throw new Exception(s"${r.code}: ${r.body}")
+  //   }
+  //   map("strengths").foreach { map =>
+  //     fam.update(
+  //       map("feature1").toString,
+  //       map("feature2").toString,
+  //       map("statistic").asInstanceOf[Number].doubleValue
+  //     )
+  //   }
+  //   parse(r.body).extract[Map[String, List[Map[String, Any]]]]
+  //   (fam, map("features"))
+  // }
 
   def getAssociationFeatureLists()(implicit client: DataRobotClient) = {
     val url = s"${path}${this.id}/featureAssociationMatrix/list/"
@@ -394,17 +403,25 @@ class Project(
   def getLeaderboardLink()(implicit client: DataRobotClient) =
     throw new NotImplementedError("Nope")
 
-
-  def getModelJob(jobId: String)(implicit client: DataRobotClient) = Job.get(id, jobId, "modelJobs")
-  def getModelJobs(status: Option[String] = None)(implicit client: DataRobotClient) = Job.getJobs(id, "modelJobs", status) //ModelJob.getModelJobs(this.id, status)
+  def getModelJob(jobId: String)(implicit client: DataRobotClient) =
+    Job.get(id, jobId, "modelJobs")
+  def getModelJobs(
+      status: Option[String] = None
+  )(implicit client: DataRobotClient) =
+    Job.getJobs(
+      id,
+      "modelJobs",
+      status
+    ) //ModelJob.getModelJobs(this.id, status)
 
   /**
     * @todo implement this
     */
-
-  def getPredictJob(jobId: String)(implicit client: DataRobotClient) = Job.get(id, jobId, "predictJobs")
-  def getPredictJobs(status: Option[String] = None)(implicit client: DataRobotClient) = Job.getJobs(id, "predictJobs", status)
-    
+  def getPredictJob(jobId: String)(implicit client: DataRobotClient) =
+    Job.get(id, jobId, "predictJobs")
+  def getPredictJobs(status: Option[String] = None)(
+      implicit client: DataRobotClient
+  ) = Job.getJobs(id, "predictJobs", status)
 
   /**
     * @todo implement this
@@ -471,7 +488,7 @@ class Project(
       partitioningMethod: Option[PartitioningMethod] = None,
       featurelistId: Option[String] = None,
       advancedOptions: Option[AdvancedOptions] = None,
-      maxWait: Int = 60000, // need enum for this
+      maxWait: Int = 600000, // need enum for this
       targetType: Option[TargetType.Value] = None,
       workerCount: Option[Int] = None
   )(implicit client: DataRobotClient) = {
@@ -595,7 +612,10 @@ class Project(
   def startAutopilot(
       projectId: String,
       featurelistId: Option[String] = None
-  ) = ???
+  )(implicit client: DataRobotClient) = {
+    val data = _getDataReady(Seq(("featurelistId", featurelistId)))
+    client.patch(s"projects/$projectId/aim/", data)
+  }
 
   def refresh()(implicit client: DataRobotClient) = {
     //throw new NotImplementedError("not yet")
@@ -752,8 +772,6 @@ object Project {
   def delete(projectId: String)(implicit client: DataRobotClient) = {
     client.delete(s"$path$projectId/").asString
   }
-
-
 
   /** Get a project
     *  @param projectId
