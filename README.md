@@ -2,6 +2,8 @@
 
 Scala API (very rough)
 
+[Databricks notebook](https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/4798737478558773/922812761796198/1925545321317125/latest.html)
+
 ```
 import com.github.timsetsfire.datarobot._
 import com.github.timsetsfire.datarobot.Implicits._
