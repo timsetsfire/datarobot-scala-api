@@ -1,5 +1,7 @@
 package com.github.timsetsfire.datarobot
 import scalaj.http._
+import org.yaml.snakeyaml.Yaml
+
 
 class DataRobotClient(token: String, val endpoint: String) {
 
@@ -55,4 +57,10 @@ class DataRobotClient(token: String, val endpoint: String) {
 }
 object DataRobotClient {
   def apply(token: String, endpoint: String) = new DataRobotClient(token, endpoint)
+  def apply(configPath: String) = { 
+    val yaml = new Yaml()
+    val document = scala.io.Source.fromFile(configPath).getLines.mkString("\n")
+    val creds: java.util.Map[String, String] = yaml.load(document)
+    new DataRobotClient(creds.get("DATAROBOT_API_TOKEN"), creds.get("DATAROBOT_ENDPOINT"))
+  }
 }
