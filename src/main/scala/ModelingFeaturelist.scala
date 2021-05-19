@@ -29,7 +29,7 @@ object ModelingFeaturelist {
 
   def getModelingFeaturelist(projectId: String, featurelistId: String)(
       implicit client: DataRobotClient
-  ) {
+  ) = {
     val r = client.get(s"projects/${projectId}/modelingFeaturelists/${featurelistId}/").asString
     parse(r.body).extract[ModelingFeaturelist]
   }

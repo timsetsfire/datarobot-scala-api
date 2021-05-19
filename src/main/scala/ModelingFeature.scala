@@ -37,7 +37,7 @@ case class ModelingFeature(
 
 object ModelingFeature {
 
-    def getModelingFeatures(projectId: String)(implicit client: DataRobotClient) { 
+    def getModelingFeatures(projectId: String)(implicit client: DataRobotClient) = { 
         val r = client.get(s"projects/${projectId}/modelingFeatures/").asString
         val JObject(ls) = parse(r.body)
         val JArray(json) = ls(2)._2
