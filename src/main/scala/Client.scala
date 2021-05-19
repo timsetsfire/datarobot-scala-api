@@ -56,11 +56,22 @@ class DataRobotClient(token: String, val endpoint: String) {
 
 }
 object DataRobotClient {
-  def apply(token: String, endpoint: String) = new DataRobotClient(token, endpoint)
+  def apply(token: String, endpoint: String) = {
+    endpoint.endsWith("/") match { 
+      case true => new DataRobotClient(token, endpoint)
+      case false => new DataRobotClient(token, endpoint + "/")
+    }
+  }
+
   def apply(configPath: String) = { 
     val yaml = new Yaml()
     val document = scala.io.Source.fromFile(configPath).getLines.mkString("\n")
     val creds: java.util.Map[String, String] = yaml.load(document)
-    new DataRobotClient(creds.get("DATAROBOT_API_TOKEN"), creds.get("DATAROBOT_ENDPOINT"))
+    val endpoint = creds.get("DATAROBOT_ENDPOINT")
+    val token = creds.get("DATAROBOT_API_TOKEN")
+    endpoint.endsWith("/") match { 
+      case true => new DataRobotClient(token, endpoint)
+      case false => new DataRobotClient(token, endpoint + "/")
+    }
   }
 }
