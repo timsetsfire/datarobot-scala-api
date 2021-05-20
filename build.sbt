@@ -6,22 +6,19 @@ organization := "com.github.timsetsfire"
 
 scalaVersion := "2.12.8"
 
-libraryDependencies  ++= Seq(
-
+libraryDependencies ++= Seq(
   "org.scalaj" %% "scalaj-http" % "2.4.2",
   "org.json4s" %% "json4s-native" % "3.5.3", // compatible with spark
   "org.json4s" %% "json4s-jackson" % "3.5.3", // comparitlbe with spark
-  "org.json4s" %% "json4s-ext" % "3.5.3",     // compatible with spark
+  "org.json4s" %% "json4s-ext" % "3.5.3", // compatible with spark
   "org.apache.spark" %% "spark-core" % "2.4.6" % "provided",
   "org.apache.spark" %% "spark-sql" % "2.4.6" % "provided",
   "org.apache.spark" %% "spark-mllib" % "2.4.6" % "provided",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2", 
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
   "org.scala-graph" %% "graph-core" % "1.11.5",
-    "org.scala-graph" %% "graph-dot" % "1.11.5", 
-    "org.yaml" % "snakeyaml" % "1.28"
-
+  "org.scala-graph" %% "graph-dot" % "1.11.5",
+  "org.yaml" % "snakeyaml" % "1.28"
 )
-
 
 enablePlugins(BuildInfoPlugin)
 buildInfoKeys := Seq[BuildInfoKey](version)
@@ -39,14 +36,13 @@ scalacOptions ++= Seq(
 
 // scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/root-doc.txt")
 
-// publishTo := {
-//   val nexus = "https://oss.sonatype.org/"
-//   if (version.value.trim.endsWith("SNAPSHOT"))
-//     Some("snapshots" at nexus + "content/repositories/snapshots")
-//   else
-//     Some("releases" at nexus + "service/local/staging/deploy/maven2")
-// }
-publishTo := Some(Resolver.file("file", new File("/Users/timothy.whittaker/tmp")))
+// publishTo := sonatypePublishToBundle.value
+
+ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
+
+publishTo := Some(
+  Resolver.file("file", new File("/Users/timothy.whittaker/tmp"))
+)
 
 publishMavenStyle := true
 

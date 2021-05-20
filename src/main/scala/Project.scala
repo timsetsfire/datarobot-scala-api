@@ -662,13 +662,7 @@ object Project {
     /** create from id
     */
   def apply(projectId: String)(implicit client: DataRobotClient) = {
-    val r = client.get(s"${path}${projectId}/").asString
-    if (r.code == 410) {
-      val res = parse(r.body).extract[Map[String, Any]]
-      throw new Exception(s"GONE => ${res.getOrElse("message", "??")}")
-    }
-    val result = parse(r.body) // comding from jackson.JsonMethods
-    result.extract[Project]
+    get(projectId)(client)
   }
 
   /** create from file
@@ -676,38 +670,15 @@ object Project {
   def apply(file: java.io.File, projectName: String)(implicit
       client: DataRobotClient
   ) = {
-    val fs: java.io.InputStream = new java.io.FileInputStream(file)
-    val bytesInStream = fs.available
-    val dataMP = MultiPart(
-      name = "file",
-      filename = file.getAbsolutePath,
-      mime = "text/csv",
-      data = fs,
-      numBytes = bytesInStream,
-      lenWritten => Unit
-    )
-    val projectNameMP = MultiPart(
-      name = "projectName",
-      filename = "",
-      mime = "text/plain",
-      data = projectName
-    )
-    val status = client.postMulti("projects/", projectNameMP, dataMP).asString
-    status.code match {
-      case 202    => Unit
-      case x: Int => throw new Exception(s"$x: ${status.body}")
+    createFromFile(file.toString, projectName)(client)
     }
-    val loc =
-      Waiter.waitForAsyncResolution(status.headers("location")(0), maxWait)
-    Project.get(loc(0).replace(s"${client.endpoint}${this.path}", ""))
-  }
 
   /** create from spark dataframe
     */
   def apply(df: org.apache.spark.sql.DataFrame, projectName: String)(implicit
       client: DataRobotClient
   ) = {
-    throw new NotImplementedError("Nope")
+    createFromSparkDf(df, projectName)(client)
   }
 
   /** create from url
@@ -715,7 +686,7 @@ object Project {
   def apply(url: java.net.URL, projectName: String)(implicit
       client: DataRobotClient
   ) = {
-    throw new NotImplementedError("Nope")
+    createFromURL(url.toString, projectName)(client)
   }
 
   // /** TODO create from datasource ??
