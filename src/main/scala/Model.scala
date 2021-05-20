@@ -439,6 +439,12 @@ object Model {
 
   import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
 
+  def apply(projectId: String, modelId: String)(
+    implicit client: DataRobotClient
+  ) = { 
+    get(projectId, modelId)(client)
+  }
+
   def get(projectId: String, modelId: String)(
       implicit client: DataRobotClient
   ) = {

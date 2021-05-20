@@ -67,8 +67,8 @@ object DataRobotClient {
     val yaml = new Yaml()
     val document = scala.io.Source.fromFile(configPath).getLines.mkString("\n")
     val creds: java.util.Map[String, String] = yaml.load(document)
-    val endpoint = creds.get("DATAROBOT_ENDPOINT")
-    val token = creds.get("DATAROBOT_API_TOKEN")
+    val endpoint = creds.get("endpoint")
+    val token = creds.get("token")
     endpoint.endsWith("/") match { 
       case true => new DataRobotClient(token, endpoint)
       case false => new DataRobotClient(token, endpoint + "/")

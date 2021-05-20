@@ -647,11 +647,89 @@ object Project {
 
   val path = "projects/"
 
+  var maxWait = 600
+
+  def setMaxWait(x: Int): Unit = { 
+    maxWait = x
+  }
+
   /** Create a project from local file
     * @param file
     * @param projectName
     * @param maxWait
     */
+
+    /** create from id
+    */
+  def apply(projectId: String)(implicit client: DataRobotClient) = {
+    val r = client.get(s"${path}${projectId}/").asString
+    if (r.code == 410) {
+      val res = parse(r.body).extract[Map[String, Any]]
+      throw new Exception(s"GONE => ${res.getOrElse("message", "??")}")
+    }
+    val result = parse(r.body) // comding from jackson.JsonMethods
+    result.extract[Project]
+  }
+
+  /** create from file
+    */
+  def apply(file: java.io.File, projectName: String)(implicit
+      client: DataRobotClient
+  ) = {
+    val fs: java.io.InputStream = new java.io.FileInputStream(file)
+    val bytesInStream = fs.available
+    val dataMP = MultiPart(
+      name = "file",
+      filename = file.getAbsolutePath,
+      mime = "text/csv",
+      data = fs,
+      numBytes = bytesInStream,
+      lenWritten => Unit
+    )
+    val projectNameMP = MultiPart(
+      name = "projectName",
+      filename = "",
+      mime = "text/plain",
+      data = projectName
+    )
+    val status = client.postMulti("projects/", projectNameMP, dataMP).asString
+    status.code match {
+      case 202    => Unit
+      case x: Int => throw new Exception(s"$x: ${status.body}")
+    }
+    val loc =
+      Waiter.waitForAsyncResolution(status.headers("location")(0), maxWait)
+    Project.get(loc(0).replace(s"${client.endpoint}${this.path}", ""))
+  }
+
+  /** create from spark dataframe
+    */
+  def apply(df: org.apache.spark.sql.DataFrame, projectName: String)(implicit
+      client: DataRobotClient
+  ) = {
+    throw new NotImplementedError("Nope")
+  }
+
+  /** create from url
+    */
+  def apply(url: java.net.URL, projectName: String)(implicit
+      client: DataRobotClient
+  ) = {
+    throw new NotImplementedError("Nope")
+  }
+
+  // /** TODO create from datasource ??
+  //  */
+  // def apply()
+
+  /** create from AiCatalog Dataset
+    */
+  // def apply(dataset: Dataset, projectName: String)(implicit
+  //     client: DataRobotClient
+  // ) = {
+  //   throw new NotImplementedError("Nope")
+  // }
+
   def createFromFile(
       file: String,
       projectName: Option[String] = None,
@@ -862,5 +940,7 @@ object Project {
     Project.get(project.id)
 
   }
+
+
 
 }
