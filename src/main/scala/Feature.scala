@@ -1,4 +1,4 @@
-package com.github.timsetsfire.datarobot
+package io.github.timsetsfire.datarobot
 
 import scala.util.Try
 import org.json4s._
@@ -6,7 +6,7 @@ import org.json4s.jackson.Serialization.write
 import org.json4s.jackson.JsonMethods._
 import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
-import com.github.timsetsfire.datarobot.enums.{VariableTypeTransform, DateExtractionUnits}
+import io.github.timsetsfire.datarobot.enums.{VariableTypeTransform, DateExtractionUnits}
 
 
 /** Feature
@@ -63,7 +63,7 @@ import com.github.timsetsfire.datarobot.enums.{VariableTypeTransform, DateExtrac
 
   object Feature { 
 
-    import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
+    import io.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
 
     def getFeatures(projectId: String)(implicit client: DataRobotClient) = {
       val r = client.get(s"projects/${projectId}/features/").asString

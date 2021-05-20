@@ -1,9 +1,9 @@
-package com.github.timsetsfire.datarobot
+package io.github.timsetsfire.datarobot
 
-import com.github.timsetsfire.datarobot.enums.{CVMethod, ValidationType}
-import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
+import io.github.timsetsfire.datarobot.enums.{CVMethod, ValidationType}
+import io.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
 import org.json4s.jackson.Serialization.{writePretty, write}
-import com.github.timsetsfire.datarobot.Implicits._
+import io.github.timsetsfire.datarobot.Implicits._
 
 
 
@@ -44,7 +44,7 @@ class Partition(
   override def toString = writePretty(this)
 }
 
-/** Date Time Partitioning use for a Time Series Project.  This should not be constructed directly.  See [[com.github.timsetsfire.datarobot.DateTimePartitioningMethod]] when 
+/** Date Time Partitioning use for a Time Series Project.  This should not be constructed directly.  See [[io.github.timsetsfire.datarobot.DateTimePartitioningMethod]] when 
  * setting up DateTime Parititioning for a project via UI.  
 @param projectId – The ID of the project 
 @param datetimePartitionColumn (string)–Thedatecolumnthatwillbeusedasadate-time partition column

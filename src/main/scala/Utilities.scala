@@ -1,4 +1,4 @@
-package com.github.timsetsfire.datarobot
+package io.github.timsetsfire.datarobot
 import org.json4s._
 import org.json4s.jackson.Serialization.write
 import org.json4s.jackson.JsonMethods._
@@ -6,12 +6,12 @@ import org.json4s._
 import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
 import org.apache.spark.sql.DataFrame
-import com.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
+import io.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
 import scalaj.http.HttpOptions
 
 object Utilities {
 
-  import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
+  import io.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
 
   def _getDataReady(data: Seq[(String, Any)]) = {
     write(data.toMap)

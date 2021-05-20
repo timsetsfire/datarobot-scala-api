@@ -1,4 +1,4 @@
-package com.github.timsetsfire.datarobot
+package io.github.timsetsfire.datarobot
 
 case class PredictedVsActual(bin: List[String], 
                             rowCount: Option[Double],

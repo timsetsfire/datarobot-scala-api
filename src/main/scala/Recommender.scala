@@ -1,4 +1,4 @@
-package com.github.timsetsfire.datarobot
+package io.github.timsetsfire.datarobot
 
 
 /** The recommender object will describe additional options specified if the project is used for a recommender problem. It will be of the following form:

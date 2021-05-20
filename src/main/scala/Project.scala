@@ -1,4 +1,4 @@
-package com.github.timsetsfire.datarobot
+package io.github.timsetsfire.datarobot
 
 import scala.util.Try
 import java.io.{File, FileInputStream}
@@ -10,11 +10,11 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s._
 import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
-import com.github.timsetsfire.datarobot.Utilities._
-import com.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
+import io.github.timsetsfire.datarobot.Utilities._
+import io.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
 
-import com.github.timsetsfire.datarobot.enums._
-import com.github.timsetsfire.datarobot.Implicits._
+import io.github.timsetsfire.datarobot.enums._
+import io.github.timsetsfire.datarobot.Implicits._
 
 import breeze.linalg.Counter2
 
@@ -28,9 +28,9 @@ import breeze.linalg.Counter2
   * @param created project creation time
   * @param target project target
   * @param metric the metric used to select the best-performing models
-  * @param partition partition of given project.  See [[com.github.timsetsfire.datarobot.Partition]].
+  * @param partition partition of given project.  See [[io.github.timsetsfire.datarobot.Partition]].
   * @param recommender does nothing
-  * @param advancedOptions advanced options of the project.  See [[com.github.timsetsfire.datarobot.AdvancedOptions]].
+  * @param advancedOptions advanced options of the project.  See [[io.github.timsetsfire.datarobot.AdvancedOptions]].
   * @param positiveClass for binary classification projects, the class designated to be the positive class. Otherwise, null.
   * @param maxTrainPct the maximum percentage of the dataset that can be used to successfully train a model without going into the validation data
   * @param maxTrainRows the maximum number of rows of the dataset that can be used to suc- cessfully train a model without going into the validation data
@@ -61,7 +61,7 @@ class Project(
 ) {
   //
   import Project._
-  import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
+  import io.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
 
   override def toString = s"Project(${projectName.get})"
 
@@ -108,9 +108,9 @@ class Project(
     project
   }
 
-  /** @return Returns [[com.github.timsetsfire.datarobot.ModelJob]] for the requested blender
-    *  @param models list of [[com.github.timsetsfire.datarobot.Model]] to use for blending
-    *  @param blenderMethod one of [[com.github.timsetsfire.datarobot.enums.BlenderMethod]]
+  /** @return Returns [[io.github.timsetsfire.datarobot.ModelJob]] for the requested blender
+    *  @param models list of [[io.github.timsetsfire.datarobot.Model]] to use for blending
+    *  @param blenderMethod one of [[io.github.timsetsfire.datarobot.enums.BlenderMethod]]
     */
   def createBlender(models: List[Model], blenderMethod: BlenderMethod.Value)(
       implicit client: DataRobotClient
@@ -154,7 +154,7 @@ class Project(
 
   /**
     * @return returns a list of eligible blueprints
-    * @see [[com.github.timsetsfire.datarobot.Blueprint.getBlueprints]]
+    * @see [[io.github.timsetsfire.datarobot.Blueprint.getBlueprints]]
     */
   def getBlueprints()(implicit client: DataRobotClient) =
     Blueprint.getBlueprints(this.id)
@@ -162,7 +162,7 @@ class Project(
   /**
     * @param id blueprint id
     * @return blueprint
-    * @see [[com.github.timsetsfire.datarobot.Blueprint.get]]
+    * @see [[io.github.timsetsfire.datarobot.Blueprint.get]]
     */
   def getBlueprint(id: String)(implicit client: DataRobotClient) =
     Blueprint.get(this.id, id)
@@ -225,7 +225,7 @@ class Project(
   def getFrozenModel(modelId: String)(implicit client: DataRobotClient) = ???
 
   /**
-    * @return return [[com.github.timsetsfire.datarobot.Feature]] given specified featurename
+    * @return return [[io.github.timsetsfire.datarobot.Feature]] given specified featurename
     */
   def getFeature(featureName: String)(implicit client: DataRobotClient) =
     Feature.get(this.id, featureName)
@@ -242,8 +242,8 @@ class Project(
   def getMetrics(featureName: String)(implicit client: DataRobotClient) =
     Feature.getMetrics(this.id, featureName)
 
-  /** Create feature list within a project.  see also [[com.github.timsetsfire.datarobot.Featurelist.createFeaturelist]]
-    *  @return new feature list object [[com.github.timsetsfire.datarobot.Featurelist]]
+  /** Create feature list within a project.  see also [[io.github.timsetsfire.datarobot.Featurelist.createFeaturelist]]
+    *  @return new feature list object [[io.github.timsetsfire.datarobot.Featurelist]]
     *  @param name Name for new featurelist
     *  @param features List of feature names to include in list
     */
@@ -639,11 +639,11 @@ class Project(
 
 }
 
-/** Factory for [[com.github.timsetsfire.datarobot.Project]] instances.
+/** Factory for [[io.github.timsetsfire.datarobot.Project]] instances.
   */
 object Project {
 
-  import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
+  import io.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
 
   val path = "projects/"
 

@@ -1,4 +1,4 @@
-package com.github.timsetsfire.datarobot
+package io.github.timsetsfire.datarobot
 
 import scala.util.Try
 import java.io.{File, FileInputStream}
@@ -10,11 +10,11 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s._
 import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
-import com.github.timsetsfire.datarobot.Utilities._
-import com.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
+import io.github.timsetsfire.datarobot.Utilities._
+import io.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
 
-import com.github.timsetsfire.datarobot.enums._
-import com.github.timsetsfire.datarobot.Implicits._
+import io.github.timsetsfire.datarobot.enums._
+import io.github.timsetsfire.datarobot.Implicits._
 
 class DateTimeProject(
     id: String,

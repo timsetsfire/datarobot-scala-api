@@ -1,4 +1,4 @@
-package com.github.timsetsfire.datarobot
+package io.github.timsetsfire.datarobot
 
 import scala.util.Try
 import org.json4s._
@@ -46,7 +46,7 @@ case class Blueprint(
 
 object Blueprint {
 
-  import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
+  import io.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
 
   val path = "blueprints/"
 

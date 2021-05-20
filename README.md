@@ -6,8 +6,8 @@ Scala API (very rough)
 
 
 ```
-import com.github.timsetsfire.datarobot._
-import com.github.timsetsfire.datarobot.Implicits._
+import io.github.timsetsfire.datarobot._
+import io.github.timsetsfire.datarobot.Implicits._
 val DATAROBOT_API_TOKEN = "your-key"
 val DATAROBOT_ENDPOINT = "https://app.datarobot.com/api/v2/"
 implicit val client = DataRobotClient(DATAROBOT_API_TOKEN, DATAROBOT_ENDPOINT)
@@ -40,8 +40,8 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.SparkContext
 import org.apache.log4j.Logger
 import org.apache.log4j.Level
-import com.github.timsetsfire.datarobot._
-import com.github.timsetsfire.datarobot.Implicits._
+import io.github.timsetsfire.datarobot._
+import io.github.timsetsfire.datarobot.Implicits._
 
 Logger.getLogger("org").setLevel(Level.WARN)
 Logger.getLogger("akka").setLevel(Level.WARN)

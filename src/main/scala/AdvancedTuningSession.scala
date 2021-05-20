@@ -1,4 +1,4 @@
-package com.github.timsetsfire.datarobot
+package io.github.timsetsfire.datarobot
 
 import org.json4s._
 import org.json4s.jackson.Serialization.{write, formats}
@@ -6,9 +6,9 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s._
 import org.json4s.native.JsonMethods
 import org.json4s.{DefaultFormats, Extraction, JValue}
-import com.github.timsetsfire.datarobot.Utilities._
-import com.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
-import com.github.timsetsfire.datarobot.Utilities._
+import io.github.timsetsfire.datarobot.Utilities._
+import io.github.timsetsfire.datarobot.enums.EnumFormats.enumFormats
+import io.github.timsetsfire.datarobot.Utilities._
 import java.io.Serializable
 import scala.collection.mutable.{Map => MMap}
 
@@ -20,7 +20,7 @@ import scala.collection.mutable.{Map => MMap}
   */ 
 case class AdvancedTuningSession(model: Model, description: Option[String] = None)(implicit client: DataRobotClient) {
 
-    import com.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
+    import io.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
     
     type TaskName = String
 

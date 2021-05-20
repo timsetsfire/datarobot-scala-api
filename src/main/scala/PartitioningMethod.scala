@@ -1,7 +1,7 @@
-package com.github.timsetsfire.datarobot
+package io.github.timsetsfire.datarobot
 
-import com.github.timsetsfire.datarobot.enums.{CVMethod, ValidationType}
-import com.github.timsetsfire.datarobot.Implicits._
+import io.github.timsetsfire.datarobot.enums.{CVMethod, ValidationType}
+import io.github.timsetsfire.datarobot.Implicits._
 
 trait PartitioningMethod
 
