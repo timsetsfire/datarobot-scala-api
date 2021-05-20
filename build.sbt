@@ -4,7 +4,7 @@ version := "0.1.0"
 
 organization := "io.github.timsetsfire"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.11.12"
 
 libraryDependencies ++= Seq(
   "org.scalaj" %% "scalaj-http" % "2.4.2",
