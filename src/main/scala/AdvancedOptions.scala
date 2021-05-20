@@ -5,7 +5,7 @@ import io.github.timsetsfire.datarobot.Implicits.jsonDefaultFormats
 import org.json4s.jackson.Serialization.{writePretty, write}
 
 
-/**
+/** @return AdvancedOptions object
   * @constructor The advancedOptions object specifies more settings for a project
   * @param blueprintThreshold an upper bound on running time (in hours), such that models exceeding the bound will be excluded in subsequent autopilot runs
   * @param responseCap defaults to False, if specified used to cap the maximum response of a model

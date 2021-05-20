@@ -4,7 +4,13 @@ still working to add documentation for nice javadocs.
 
 ## getting started
 
-clone this repo and build via sbt
+Either add Sonatype to resolvers in build.sbt
+
+```
+libraryDependencies ++= Seq("io.github.timsetsfire" %% "datarobot" % "0.1.1" )
+```
+
+or clone this repo and build via sbt
 
 Check it out in action at [Zepl notebook](https://bit.ly/33WAWkL)
 
@@ -30,7 +36,7 @@ project.setWorkerCount(-1)
 
 The intention of putting in support for spark DataFrame was to be able to create projects with Spark DataFrames less than 5GB in size.  Anything larger than that, I would recommend use HDFS or Hive connection to get data into datarobot.  Also, this is pushing up against the data cap on DataRobot managed cloud.  Creating a Project from a Spark Dataframe does avoid writing data to disk, and it also avoids `collect`.  
 
-While `collect` executes given job in all partitions (executors side) and collects all results (driver side) with `Array.concat(results: _*)` method. The `toLocalIterator` does the contrary. Instead of launching the job simultaneously on all partitions it executes the job on 1 partition at once. So, the driver must have enough memory to store the biggest partition.  This is the main utility leverage to create the form data that is ultimately posted to DataRobot.  I'm sure it's probably not doing exactly what I want, but it does work and could probably be made much better.  
+While `collect` executes given job in all partitions (executors side) and collects all results (driver side) with `Array.concat(results: _*)` method. The `toLocalIterator` does the contrary. Instead of launching the job simultaneously on all partitions it executes the job on 1 partition at once. So, the driver must have enough memory to store the biggest partition.  This is the main utility leverage to create the form data that is ultimately posted to DataRobot.  I'm sure it's probably not doing exactly think, but it does work and could probably be made much better.  
 
 I've tested this out with a 1.5GB dataset on Databrick Community.  
 Cluster details: 0 Workers, 1 Driver: 15.3 GB Memory, 2 Cores, 1 DBU

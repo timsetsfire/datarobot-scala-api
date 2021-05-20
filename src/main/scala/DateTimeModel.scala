@@ -12,7 +12,7 @@ import io.github.timsetsfire.datarobot.enums._
 import io.github.timsetsfire.datarobot.Utilities._
 import io.github.timsetsfire.datarobot.Implicits._
 
-/**
+/** @return DateTimeModel object
   * @constructor class used to represent DateTime models.  These should not be created directly. 
   * @param featurelistId – the ID of the featurelist used by the model
   * @param processes – a json list of processes used by the model

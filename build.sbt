@@ -1,8 +1,49 @@
-name := "datarobot-scala"
+ThisBuild / organization := "io.github.timsetsfire"
+ThisBuild / organizationName := "io.github.timsetsfire"
+ThisBuild / organizationHomepage := Some(url("https://github.com/timsetsfire/"))
+ThisBuild / name := "datarobot"
+ThisBuild / version := "0.1.1"
 
-version := "0.1.0"
+ThisBuild / scmInfo := Some(
+  ScmInfo(
+    url("https://github.com/timsetsfire/datarobot-scala-api"),
+    "scm:git@github.com:timsetsfire/datarobot-scala-api.git"
+  )
+)
+ThisBuild / developers := List(
+  Developer(
+    id    = "timsetsfire",
+    name  = "Tim Whittaker",
+    email = "timsetsfire@gmail.com",
+    url   = url("https://github.com/timsetsfire/")
+  )
+)
 
-organization := "io.github.timsetsfire"
+
+ThisBuild / description := "Rough Scala Client for DataRobot"
+ThisBuild / licenses := List("Apache 2" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
+ThisBuild / homepage := Some(url("https://github.com/timsetsfire/datarobot-scala-api"))
+
+// Remove all additional repository other than Maven Central from POM
+ThisBuild / pomIncludeRepository := { _ => false }
+sonatypeCredentialHost := "s01.oss.sonatype.org"
+
+// sonatypeBundleDirectory := (ThisBuild / baseDirectory).value / target.value.getName / "sonatype-staging" / (ThisBuild / version).value
+
+publishTo := sonatypePublishToBundle.value
+// ThisBuild / publishTo := {
+//   val nexus = "https://s01.oss.sonatype.org/"
+//   if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
+//   else Some("releases" at nexus + "service/local/staging/deploy/maven2")
+// }
+
+// ThisBuild / publishTo := Some(
+//   Resolver.file("file", new File("/Users/timothy.whittaker/tmp"))
+// )
+
+ThisBuild / publishMavenStyle := true
+
+crossScalaVersions := Seq("2.11.12", "2.12.13")
 
 scalaVersion := "2.11.12"
 
@@ -20,12 +61,6 @@ libraryDependencies ++= Seq(
   "org.yaml" % "snakeyaml" % "1.28"
 )
 
-enablePlugins(BuildInfoPlugin)
-buildInfoKeys := Seq[BuildInfoKey](version)
-buildInfoPackage := "datarobot"
-
-crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.8", "2.13.0")
-
 javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
 
 scalacOptions ++= Seq(
@@ -34,40 +69,5 @@ scalacOptions ++= Seq(
   "-Xfuture"
 )
 
-// scalacOptions in (Compile, doc) ++= Seq("-doc-root-content", baseDirectory.value+"/root-doc.txt")
-
-// publishTo := sonatypePublishToBundle.value
-
-ThisBuild / sonatypeCredentialHost := "s01.oss.sonatype.org"
-
-publishTo := Some(
-  Resolver.file("file", new File("/Users/timothy.whittaker/tmp"))
-)
-
-publishMavenStyle := true
-
-publishArtifact in Test := false
-
-pomIncludeRepository := { x => false }
-
-pomExtra := (
-  <url>http://github.com/timsetsfire/scala-datarobot-api</url>
-  <licenses>
-    <license>
-      <name>Apache 2</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <scm>
-    <url>git@github.com:timsetsfire/datarobot-scala-api.git</url>
-    <connection>scm:git:git@github.com:timsetsfire/datarobot-scala-api.git</connection>
-  </scm>
-  <developers>
-    <developer>
-      <id>timsetsfire</id>
-      <name>Tim Whittaker</name>
-      <url>http://github.com/timsetsfire</url>
-    </developer>
-  </developers>
-)
+// export GPG_TTY=$(tty)
+// make sure to set env var PGP_PASSPHRASE
