@@ -2,7 +2,7 @@
 
 Scala API (very rough)
 
-[Databricks notebook](https://databricks-prod-cloudfront.cloud.databricks.com/public/4027ec902e239c93eaaa8714f173bcfc/4798737478558773/922812761796198/1925545321317125/latest.html)
+[Zepl notebook](https://bit.ly/33WAWkL)
 
 ```
 import com.github.timsetsfire.datarobot._
@@ -10,8 +10,10 @@ import com.github.timsetsfire.datarobot.Implicits._
 val DATAROBOT_API_TOKEN = "your-key"
 val DATAROBOT_ENDPOINT = "https://app.datarobot.com/api/v2/"
 implicit val client = DataRobotClient(DATAROBOT_API_TOKEN, DATAROBOT_ENDPOINT)
+// or can take a yaml file with keys token and endpoint
+// implicit val client = DataRobotClient("config.yaml")
 val file = "code/10K_Lending_Club_Loans.csv"
-val project = Project.createFromFile(file, "LendingClub Scala API v6")
+val project = Project(file, "LendingClub Scala API v6")
 project.setTarget("is_bad" mode = "manual")
 val blueprints = project.getBlueprints
 project.train(blueprints(0))
@@ -55,5 +57,14 @@ val df = sqlContext.read.format("csv").options(readerOptions).load("/Users/timot
 val DATAROBOT_API_TOKEN = "your-token"
 val DATAROBOT_ENDPOINT = "https://app.datarobot.com/api/v2/"
 implicit val client = DataRobotClient(DATAROBOT_API_TOKEN, DATAROBOT_ENDPOINT)
-val project = Project.createFromSparkDf(df, "LendingClub Scala API")
+val project = Project(df, "LendingClub Scala API")
 ```
+
+A cool thing about using with Spark -> alot of the `get` methods return lists of case classes.  For example, with Features in a DataRobot project, we can do something like
+
+```:scala
+val features = project.getFeatures
+val featuresDf = features.toDF
+```
+
+Using DataBricks or Zeppelin provide immediate function to query the dataframe and put some vizualizations on top of it.  
