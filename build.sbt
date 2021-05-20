@@ -2,7 +2,7 @@ name := "datarobot-scala"
 
 version := "0.1.0"
 
-organization := "com.github.timsetsfire"
+organization := "io.github.timsetsfire"
 
 scalaVersion := "2.12.8"
 

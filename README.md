@@ -4,6 +4,7 @@ Scala API (very rough)
 
 [Zepl notebook](https://bit.ly/33WAWkL)
 
+
 ```
 import com.github.timsetsfire.datarobot._
 import com.github.timsetsfire.datarobot.Implicits._
