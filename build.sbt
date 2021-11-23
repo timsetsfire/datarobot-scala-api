@@ -1,7 +1,7 @@
 ThisBuild / organization := "io.github.timsetsfire"
 ThisBuild / organizationName := "io.github.timsetsfire"
 ThisBuild / organizationHomepage := Some(url("https://github.com/timsetsfire/"))
-ThisBuild / name := "datarobot"
+name := "datarobot-scala"
 ThisBuild / version := "0.1.1"
 
 ThisBuild / scmInfo := Some(
@@ -19,7 +19,6 @@ ThisBuild / developers := List(
   )
 )
 
-
 ThisBuild / description := "Rough Scala Client for DataRobot"
 ThisBuild / licenses := List("Apache 2" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 ThisBuild / homepage := Some(url("https://github.com/timsetsfire/datarobot-scala-api"))
@@ -28,18 +27,7 @@ ThisBuild / homepage := Some(url("https://github.com/timsetsfire/datarobot-scala
 ThisBuild / pomIncludeRepository := { _ => false }
 sonatypeCredentialHost := "s01.oss.sonatype.org"
 
-// sonatypeBundleDirectory := (ThisBuild / baseDirectory).value / target.value.getName / "sonatype-staging" / (ThisBuild / version).value
-
 publishTo := sonatypePublishToBundle.value
-// ThisBuild / publishTo := {
-//   val nexus = "https://s01.oss.sonatype.org/"
-//   if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
-//   else Some("releases" at nexus + "service/local/staging/deploy/maven2")
-// }
-
-// ThisBuild / publishTo := Some(
-//   Resolver.file("file", new File("/Users/timothy.whittaker/tmp"))
-// )
 
 ThisBuild / publishMavenStyle := true
 
@@ -58,8 +46,14 @@ libraryDependencies ++= Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
   "org.scala-graph" %% "graph-core" % "1.11.5",
   "org.scala-graph" %% "graph-dot" % "1.11.5",
-  "org.yaml" % "snakeyaml" % "1.28"
+  "org.yaml" % "snakeyaml" % "1.28",
+  "org.scalatest" %% "scalatest" % "3.2.10" % "test"
+
 )
+
+artifactName := { (sv: ScalaVersion, module: ModuleID, artifact: Artifact) =>
+  artifact.name + "-" + module.revision + "." + artifact.extension
+}
 
 javacOptions ++= Seq("-source", "1.7", "-target", "1.7")
 

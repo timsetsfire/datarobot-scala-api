@@ -2,6 +2,7 @@ package io.github.timsetsfire.datarobot
 
 import scala.util.Try
 import java.io.{File, FileInputStream}
+import java.net.URL
 import scalaj.http.MultiPart
 import scalaj.http.HttpOptions
 import org.json4s._
@@ -104,8 +105,8 @@ class Project(
     )
     val r = client.postData("projectClones/", data).asString
     val loc = Waiter.waitForAsyncResolution(r.headers("location")(0), maxWait)
-    val project = Project.get(loc(0).replace(s"${client.endpoint}${path}", ""))
-    project
+    val pid = new File( new URL(loc(0)).getFile ).getName
+    Project.get(pid)
   }
 
   /** @return Returns [[io.github.timsetsfire.datarobot.ModelJob]] for the requested blender
@@ -533,7 +534,8 @@ class Project(
     val status = client.patch(s"projects/${this.id}/aim/", data).asString
     val loc =
       Waiter.waitForAsyncResolution(status.headers("location")(0), maxWait)
-    val project = Project.get(loc(0).replace(s"${client.endpoint}${path}", ""))
+    val pid = new File( new URL(loc(0)).getFile ).getName
+    val project = Project.get(pid)
     workerCount match {
       case Some(wc) => {
         project.setWorkerCount(wc)
@@ -733,7 +735,8 @@ object Project {
     }
     val loc =
       Waiter.waitForAsyncResolution(status.headers("location")(0), maxWait)
-    Project.get(loc(0).replace(s"${client.endpoint}${this.path}", ""))
+    val pid = new File( new URL(loc(0)).getFile ).getName
+    Project.get(pid)
   }
 
   // not great.  when toLocalIterator is run, data must fit into mani memory on head node to be feed local iterator
@@ -779,7 +782,8 @@ object Project {
       .asString
     val loc =
       Waiter.waitForAsyncResolution(status.headers("location")(0), maxWait)
-    Project.get(loc(0).replace(s"${client.endpoint}${this.path}", ""))
+    val pid = new File( new URL(loc(0)).getFile ).getName
+    val project = Project.get(pid)
   }
 
   /** Create project from HDFS

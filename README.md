@@ -7,7 +7,7 @@ still working to add documentation for nice javadocs.
 Either add Sonatype to resolvers in build.sbt
 
 ```
-libraryDependencies ++= Seq("io.github.timsetsfire" %% "datarobot" % "0.1.1" )
+libraryDependencies ++= Seq("io.github.timsetsfire" %% "datarobot-scala" % "0.1.3" )
 ```
 
 or clone this repo and build via sbt
